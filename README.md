@@ -1,7 +1,7 @@
 
-# Basic ReactJS Login Template Project 
+# MechanicOS - WebApp Car Workshop Manager
 
-Base project template to start a project with a basic login screen
+This project was built to manage a Car Workshop.
 
 ## Getting Started 🚀
 
