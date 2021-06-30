@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { ToastContainer } from 'react-toastify';
+import React, { useState, useEffect, useMemo } from "react";
+import { ToastContainer } from "react-toastify";
 import { useHistory } from "react-router-dom";
-import Auth from './views/Auth';
-import AuthContext from './context/AuthContext';
+import Auth from "./views/Auth";
+import AuthContext from "./context/AuthContext";
+import MyContextProvider from "./context/BudgetContext";
 import { ApolloProvider } from "@apollo/client";
 import client from "./config/apollo";
-import { getToken, decodeToken, removeToken } from './utils/token';
-import Navigation from './routes/Navigation';
+import { getToken, decodeToken, removeToken } from "./utils/token";
+import Navigation from "./routes/Navigation";
 
 function App() {
   const [auth, setAuth] = useState(undefined);
@@ -18,7 +19,7 @@ function App() {
       setAuth(null);
     } else {
       const { exp } = decodeToken(token);
-      if (Date.now() >= (exp * 1000)) {
+      if (Date.now() >= exp * 1000) {
         cleanStorage();
       } else {
         try {
@@ -33,9 +34,8 @@ function App() {
   const cleanStorage = () => {
     client.clearStore();
     logout();
-    history.push('/');
-  }
-
+    history.push("/");
+  };
 
   const logout = () => {
     removeToken();
@@ -60,18 +60,20 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <AuthContext.Provider value={authData}>
-        {!auth ? <Auth /> : <Navigation />}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
+        <MyContextProvider>
+          {!auth ? <Auth /> : <Navigation />}
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </MyContextProvider>
       </AuthContext.Provider>
     </ApolloProvider>
   );

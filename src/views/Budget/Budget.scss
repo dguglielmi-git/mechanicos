@@ -1,0 +1,605 @@
+@import '../../scss/index.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.budget {
+  .budget-title {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 10px;
+
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  }
+  &__head {
+    display: flex;
+    width: 100%;
+    justify-content: space-between !important;
+  }
+
+  .title-data {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+  &__client-data {
+    display: flex;
+    flex-wrap: wrap;
+
+    .data-client {
+      width: 90%;
+      margin-bottom: 10px;
+    }
+    .data-address {
+      width: 50%;
+      margin-right: 2%;
+      margin-bottom: 10px;
+    }
+    .data-city {
+      width: 38%;
+      margin-right: 2%;
+      margin-bottom: 10px;
+    }
+    .data-vehicle {
+      width: 35%;
+      margin-right: 2%;
+      margin-bottom: 10px;
+    }
+    .data-brand {
+      width: 31%;
+      margin-right: 2%;
+      margin-bottom: 10px;
+    }
+    .data-plate {
+      width: 20%;
+      margin-right: 2%;
+      margin-bottom: 10px;
+    }
+
+    .data-calendar {
+      display: flex;
+      flex-direction: column;
+      width: 40%;
+      margin-left: -5px;
+      @media (max-width: $breakpoint-tablet) {
+        width: 100%;
+      }
+    }
+  }
+
+  &__add {
+    display: flex;
+    flex-direction: column !important;
+    margin-top: 3%;
+
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    &-print {
+      margin-bottom: 20px;
+    }
+
+    &-fields {
+      display: flex;
+
+      @media (max-width: $breakpoint-tablet) {
+        flex-direction: column;
+      }
+
+      .input {
+        margin-left: 1% !important;
+
+        &:first-child {
+          width: 10%;
+          @media (max-width: $breakpoint-tablet) {
+            width: 50px;
+          }
+        }
+
+        &:nth-child(2) {
+          width: 60% !important;
+          @media (max-width: $breakpoint-tablet) {
+            width: 100% !important;
+            margin-top: 10px !important;
+            margin-bottom: 10px !important;
+            padding-right: 20px;
+          }
+        }
+
+        &:nth-child(3) {
+          width: 15% !important;
+          @media (max-width: $breakpoint-tablet) {
+            width: 50% !important;
+          }
+        }
+      }
+
+      .button {
+        margin-left: 10px !important;
+        width: 10%;
+        @media (max-width: $breakpoint-tablet) {
+          margin-top: 10px !important;
+          margin-left: 0px !important;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &__list {
+    display: flex;
+    justify-content: center !important;
+
+    .card {
+      margin-top: 20px;
+      @media (min-width: $breakpoint-tablet) {
+        width: 800px;
+      }
+
+      .options {
+        display: flex;
+
+        .btn-options {
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        .icon {
+          margin-left: 10px;
+        }
+      }
+
+      .col-quantity {
+        @media (max-width: $breakpoint-mobile) {
+          width: 45px;
+        }
+        width: 50px;
+      }
+
+      .col-description {
+        width: 45%;
+        @media (max-width: $breakpoint-mobile) {
+          width: 95px;
+        }
+      }
+
+      .col-price {
+        @media (max-width: $breakpoint-mobile) {
+          width: 85px;
+        }
+      }
+
+      .col-subtotal {
+        @media (max-width: $breakpoint-mobile) {
+          width: 85px;
+        }
+      }
+
+      .total-amount {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        border-radius: 5px;
+        border: solid lavender;
+        border-width: 1.5px;
+        background-color: white;
+
+        &__figure {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  &__final-options {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+.budget-preview {
+  display: flex;
+  padding: 50px;
+  flex-direction: column;
+
+  .header-letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    background-color: white;
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    left: 46%;
+    top: 50px;
+    position: relative;
+
+    p {
+      font-size: 26px;
+      font-weight: bold;
+    }
+  }
+  .header-budget {
+    display: flex;
+    height: 160px;
+
+    &__left-box {
+      width: 50%;
+      border: 1px solid black;
+
+      .left-box-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          margin-top: 5px;
+          height: 60px;
+          width: 150px;
+        }
+
+        &__label {
+          margin-top: 0px;
+          font-style: italic;
+        }
+
+        &__address {
+          margin-top: 5px;
+        }
+
+        &__vat-label {
+          p {
+            font-weight: bold;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+
+    &__right-box {
+      width: 50%;
+      border: 1px solid black;
+
+      .right-box-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &__header {
+          font-weight: bold;
+          font-size: 21px;
+        }
+
+        &__subtitle {
+          font-size: 12px;
+          margin-top: -2px;
+        }
+
+        &__invoice {
+          display: flex;
+          width: 100%;
+          margin-left: 60px;
+          margin-top: 10px;
+
+          &-caption {
+            margin-right: 5px;
+          }
+        }
+
+        &__date {
+          display: flex;
+          width: 100%;
+          height: 25px;
+          margin-top: 5px;
+
+          &-caption {
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 60px;
+            margin-right: 10px;
+          }
+
+          &-value {
+            display: flex;
+            width: 100%;
+            font-weight: bold;
+            font-size: 18px;
+
+            &-day {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 50px;
+              border: 1px solid black;
+              border-radius: 5px 0 0 5px;
+            }
+
+            &-month {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 50px;
+              border: 1px solid black;
+            }
+
+            &-year {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 50px;
+              border: 1px solid black;
+              border-radius: 0 5px 5px 0;
+            }
+          }
+        }
+
+        &__cuit {
+          display: flex;
+          width: 100%;
+          margin-left: 50px;
+          margin-top: 5px;
+          font-size: 10px;
+
+          &-caption {
+            margin-right: 17px;
+          }
+        }
+
+        &__iibb {
+          display: flex;
+          width: 100%;
+          margin-left: 50px;
+          font-size: 10px;
+
+          &-caption {
+            margin-right: 5px;
+          }
+        }
+
+        &__start {
+          display: flex;
+          width: 100%;
+          margin-left: 50px;
+          font-size: 10px;
+
+          &-caption {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  .client-info {
+    width: 100%;
+    border: 1px solid black;
+
+    &__label-mr {
+      display: flex;
+      height: 20px;
+      margin-top: 5px;
+      margin-left: 5px;
+      margin-bottom: 10px;
+
+      &-caption {
+        min-width: 60px;
+        width: 12%;
+        font-weight: bold;
+      }
+
+      &-input {
+        width: 86%;
+        border-bottom: 1px dashed black;
+      }
+    }
+
+    &__label-address {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      margin-left: 5px;
+
+      &-caption {
+        min-width: 60px;
+        width: 12%;
+        font-weight: bold;
+      }
+      &-input {
+        width: 40%;
+        border-bottom: 1px dashed black;
+      }
+
+      &-city-caption {
+        min-width: 60px;
+        width: 10%;
+        margin-left: 5px;
+        font-weight: bold;
+      }
+
+      &-city-input {
+        min-width: 100px;
+        width: 34%;
+        margin-left: 5px;
+        border-bottom: 1px dashed black;
+      }
+    }
+
+    &__label-vehicle {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      margin-left: 5px;
+
+      &-caption {
+        min-width: 60px;
+        width: 12%;
+        font-weight: bold;
+      }
+
+      &-input {
+        width: 40%;
+        border-bottom: 1px dashed black;
+      }
+
+      &-brand-caption {
+        min-width: 40px;
+
+        margin-left: 5px;
+        font-weight: bold;
+      }
+
+      &-brand-input {
+        min-width: 100px;
+        width: 38%;
+        margin-left: 5px;
+        border-bottom: 1px dashed black;
+      }
+    }
+
+    &__label-plate {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      margin-left: 5px;
+
+      &-caption {
+        min-width: 60px;
+        width: 12%;
+        font-weight: bold;
+      }
+
+      &-input {
+        width: 85.2%;
+        border-bottom: 1px dashed black;
+      }
+    }
+  }
+
+  .title-header {
+    display: flex;
+    width: 100%;
+    border: 1px solid black;
+    border-top: none;
+    text-align: center;
+    font-weight: bold;
+
+    &__quantity {
+      display: flex;
+      justify-content: center;
+      border-right: 1px solid black;
+      min-width: 70px;
+      width: 10%;
+    }
+
+    &__detail {
+      border-right: 1px solid black;
+      width: 55%;
+      padding-left: 3px;
+    }
+
+    &__unit {
+      display: flex;
+      border-right: 1px solid black;
+      min-width: 110px;
+      width: 15%;
+      justify-content: center;
+    }
+
+    &__subtotal {
+      display: flex;
+      justify-content: center;
+      min-width: 110px;
+      width: 15%;
+    }
+  }
+
+  .items-detail {
+    border: 1px solid black;
+  
+    &__row {
+      display: flex;
+      border:  black;
+      border: 1px solid black;
+      height: 20px;
+
+      h4 {
+        font-weight: normal;
+        font-size: 14px;
+      }
+
+      &-quantity {
+        display: flex;
+        justify-content: center;
+        border-right: 1px solid black;
+        min-width: 70px;
+        width: 10%;
+      }
+
+      &-description {
+        border-right: 1px solid black;
+        width: 55%;
+        padding-left: 3px;
+      }
+
+      &-unit {
+        display: flex;
+        border-right: 1px solid black;
+        min-width: 110px;
+        width: 15%;
+        justify-content: center;
+      }
+
+      &-subtotal {
+        display: flex;
+        justify-content: center;
+        min-width: 110px;
+        width: 10%;
+      }
+    }
+  }
+
+  .budget-summary {
+    display: flex;
+    border: 1px solid black;
+
+    &__caption {
+      display: flex;
+      min-width: 110px;
+      width: 81.3%;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 2%;
+      border-right: 1px solid black;
+    }
+
+    &__figure {
+      display: flex;
+      align-items: center;
+      padding-left: 1%;
+      height: 25px;
+      min-width: 110px;
+      width: 10%;
+    }
+  }
+
+  .budget-expiration {
+    margin-top: 3px;
+    font-size: 12px;
+    font-style: italic;
+  }
+}

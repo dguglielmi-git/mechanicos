@@ -30,7 +30,8 @@ export default function IconCalendar(props) {
         monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
         monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
         today: 'Hoy',
-        clear: 'Claro'
+        clear: 'Claro',
+        dateFormat:	'dd/mm/yy'
     });
 
     return (
@@ -41,6 +42,7 @@ export default function IconCalendar(props) {
                 placeholder={label}
                 onChange={(e) => setDateSelected(e.value)} showIcon
                 disabled={disabled}
+                locale="es"
             />
         </div>
     )

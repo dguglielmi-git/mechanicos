@@ -1,46 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-toastify';
 import { Icon } from "semantic-ui-react";
-import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import "./Budget.scss";
+import { DataTable } from 'primereact/datatable';
+import { confirmDialog } from 'primereact/confirmdialog';
+import { numToDollar } from "../../utils/utils";
+import { BudgetContext } from '../../context/BudgetContext';
+import "../../views/Budget/Budget.scss";
 
 export default function BudgetList(props) {
-    const { lineSelected, setLineSelected, items, setItems } = props;
-   
+    const { items, setItems, totalAmount } = useContext(BudgetContext);
+
     const deleteRow = (value) => {
-
-        // in production
-        // we can get the _id as: value["_id"];
-       
-
-        // console.log(Object.entries(value));
-        // console.log(value["id"]);
-        // value["id"] = value["id"] - 1;
-        // console.log(value["id"]._id);
-
+        const deleteList = items.filter(val => val.id !== value["id"]);
+        setItems(deleteList);
     }
 
-    const editRow = (value) => {
-        setLineSelected(value);
-        // let _id = value["id"];
-        // let _quantity = value["quantity"];
-        // let _description = value["description"];
-        // let _price = value["price"];
-        // let _subtotal = value["subtotal"];
-
-        // console.log('edit ' + value);
-        // products.map(el => {
-        //     console.log(el["id"]);
-        // })
+    const accept = (value) => {
+        deleteRow(value);
+        toast.success('Registro Eliminado correctamente.');
     }
+
+    const cancel = () => {
+        toast.info('Operacion Cancelada');
+    }
+
+    const deleteSelected = (value) => {
+        confirmDialog({
+            message: 'Esta seguro de eliminar el registro?',
+            header: 'Confirmar Eliminación',
+            icon: 'pi pi-info-circle',
+            acceptClassName: 'p-button-danger',
+            accept: () => accept(value),
+            cancel
+        });
+    };
 
     const bodyMake = (value) => (
-        <>
-            <div className="options">
-                <Icon className="btn-options" name="edit"  onClick={() => editRow(value)} />
-                <Icon className="btn-options" name="trash" onClick={() => deleteRow(value)} />
-            </div>
-        </>
+
+        <div className="options">
+            <Icon className="btn-options" name="trash" onClick={() => deleteSelected(value)} />
+        </div>
+
     );
 
     return (
@@ -52,6 +53,15 @@ export default function BudgetList(props) {
                 <Column className="col-subtotal" field="subtotal" header="Importe"></Column>
                 <Column body={(props) => bodyMake(props)}></Column>
             </DataTable>
+            <div className="total-amount">
+                <div>
+                    <h3>Total:</h3>
+                </div>
+                <div className="total-amount__figure">
+                    <h3>{numToDollar(totalAmount)}</h3>
+                </div>
+            </div>
+
         </div>
     )
 }

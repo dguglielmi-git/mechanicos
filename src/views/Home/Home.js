@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
+import { useQuery } from "@apollo/client";
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from "../../components/Home/AppBar";
 import Drawer from "../../components/Home/Drawer";
-import Budget from "../../components/Budget/Budget";
-import BudgetHistory from "../../components/BudgetHistory";
+import Budget from "../Budget";
+import BudgetHistory from "../BudgetHistory";
 import useAuth from "../../hooks/useAuth";
+import { GET_TMPBUDGET } from "../../gql/budget";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +47,7 @@ export default function Home() {
     const classes = useStyles();
     const [panelSelected, setPanelSelected] = useState(null);
     const [open, setOpen] = React.useState(false);
+    const { data, loading } = useQuery(GET_TMPBUDGET);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -60,10 +64,16 @@ export default function Home() {
     const panelSelector = (selected) => {
         switch (selected) {
             case 'budget':
-                setPanelSelected(<Budget />);
+                if (loading) return null;
+                else {
+                    const { getTmpbudget } = data;
+                    setPanelSelected(<Budget getTmpbudget={getTmpbudget} />);
+                    setOpen(false);
+                }
                 break
             case 'budget-history':
                 setPanelSelected(<BudgetHistory />);
+                setOpen(false);
                 break;
             default:
                 break;
