@@ -1,28 +1,28 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { size } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Image } from "semantic-ui-react";
-import { BudgetContext } from "../../context/BudgetContext";
 import Logo from "../../assets/logo-bw.png";
 import { numToDollarRounded } from "../../utils/utils";
 
-export default function BudgetPreview() {
+export default function BudgetPreview(props) {
   const {
-    componentRef,
-    issueDateSelected,
-    items,
-    totalAmount,
-    getBudgetData,
     branch,
+    componentRef,
+    getBudgetData,
+    items,
     sequence,
-  } = useContext(BudgetContext);
+    totalAmount,
+    day,
+    month,
+    year,
+  } = props;
   const [itemList, setItemList] = useState([]);
 
   // Validate size of item list
   useEffect(() => {
     if (size(items) < 25) {
       let start = size(items);
-
       let _items = items.slice();
 
       for (let i = start; i < 25; i++) {
@@ -97,23 +97,9 @@ export default function BudgetPreview() {
               <div className="right-box-title__date">
                 <DivP cls="right-box-title__date-caption" val="FECHA" />
                 <div className="right-box-title__date-value">
-                  <DivP
-                    cls="right-box-title__date-value-day"
-                    val={issueDateSelected
-                      .getDate()
-                      .toString()
-                      .padStart(2, "0")}
-                  />
-                  <DivP
-                    cls="right-box-title__date-value-month"
-                    val={(issueDateSelected.getMonth() + 1)
-                      .toString()
-                      .padStart(2, "0")}
-                  />
-                  <DivP
-                    cls="right-box-title__date-value-year"
-                    val={issueDateSelected.getFullYear()}
-                  />
+                  <DivP cls="right-box-title__date-value-day" val={day} />
+                  <DivP cls="right-box-title__date-value-month" val={month} />
+                  <DivP cls="right-box-title__date-value-year" val={year} />
                 </div>
               </div>
               <div className="right-box-title__cuit">
@@ -182,7 +168,7 @@ export default function BudgetPreview() {
         </div>
         <div className="items-detail">
           {itemList.map((el, index) => (
-            <div className="items-detail__row">
+            <div className="items-detail__row" key={index}>
               <DivH4 cls="items-detail__row-quantity" val={el.quantity} />
               <DivH4 cls="items-detail__row-description" val={el.description} />
               <DivH4

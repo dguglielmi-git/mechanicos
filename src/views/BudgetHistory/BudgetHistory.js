@@ -1,96 +1,198 @@
-import React, { useState, useEffect } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import React, { useState, useEffect, useContext } from "react";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
+import { useQuery } from "@apollo/client";
+import { GET_BUDGETS } from "../../gql/budget";
+import { formatDate } from "../../utils/utils";
+import ScrollingModal from "../../components/Common/ScrollingModal";
+import BudgetPreview from "../../components/Budget/BudgetPreview";
+import { BudgetContext } from "../../context/BudgetContext";
 import "./BudgetHistory.scss";
 
 export default function BudgetHistory() {
-    const [products, setProducts] = useState([]);
-    
-    const data = [
-        { "id": "1000", "code": "f230fh0g3", "name": "Bamboo Watch", "description": "Product Description", "image": "bamboo-watch.jpg", "price": 65, "category": "Accessories", "quantity": 24, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1001", "code": "nvklal433", "name": "Black Watch", "description": "Product Description", "image": "black-watch.jpg", "price": 72, "category": "Accessories", "quantity": 61, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1002", "code": "zz21cz3c1", "name": "Blue Band", "description": "Product Description", "image": "blue-band.jpg", "price": 79, "category": "Fitness", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1003", "code": "244wgerg2", "name": "Blue T-Shirt", "description": "Product Description", "image": "blue-t-shirt.jpg", "price": 29, "category": "Clothing", "quantity": 25, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1004", "code": "h456wer53", "name": "Bracelet", "description": "Product Description", "image": "bracelet.jpg", "price": 15, "category": "Accessories", "quantity": 73, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1005", "code": "av2231fwg", "name": "Brown Purse", "description": "Product Description", "image": "brown-purse.jpg", "price": 120, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
-        { "id": "1006", "code": "bib36pfvm", "name": "Chakra Bracelet", "description": "Product Description", "image": "chakra-bracelet.jpg", "price": 32, "category": "Accessories", "quantity": 5, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1007", "code": "mbvjkgip5", "name": "Galaxy Earrings", "description": "Product Description", "image": "galaxy-earrings.jpg", "price": 34, "category": "Accessories", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1008", "code": "vbb124btr", "name": "Game Controller", "description": "Product Description", "image": "game-controller.jpg", "price": 99, "category": "Electronics", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 4 },
-        { "id": "1009", "code": "cm230f032", "name": "Gaming Set", "description": "Product Description", "image": "gaming-set.jpg", "price": 299, "category": "Electronics", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 3 },
-        { "id": "1010", "code": "plb34234v", "name": "Gold Phone Case", "description": "Product Description", "image": "gold-phone-case.jpg", "price": 24, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
-        { "id": "1011", "code": "4920nnc2d", "name": "Green Earbuds", "description": "Product Description", "image": "green-earbuds.jpg", "price": 89, "category": "Electronics", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1012", "code": "250vm23cc", "name": "Green T-Shirt", "description": "Product Description", "image": "green-t-shirt.jpg", "price": 49, "category": "Clothing", "quantity": 74, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1013", "code": "fldsmn31b", "name": "Grey T-Shirt", "description": "Product Description", "image": "grey-t-shirt.jpg", "price": 48, "category": "Clothing", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 3 },
-        { "id": "1014", "code": "waas1x2as", "name": "Headphones", "description": "Product Description", "image": "headphones.jpg", "price": 175, "category": "Electronics", "quantity": 8, "inventoryStatus": "LOWSTOCK", "rating": 5 },
-        { "id": "1015", "code": "vb34btbg5", "name": "Light Green T-Shirt", "description": "Product Description", "image": "light-green-t-shirt.jpg", "price": 49, "category": "Clothing", "quantity": 34, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1016", "code": "k8l6j58jl", "name": "Lime Band", "description": "Product Description", "image": "lime-band.jpg", "price": 79, "category": "Fitness", "quantity": 12, "inventoryStatus": "INSTOCK", "rating": 3 },
-        { "id": "1017", "code": "v435nn85n", "name": "Mini Speakers", "description": "Product Description", "image": "mini-speakers.jpg", "price": 85, "category": "Clothing", "quantity": 42, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1018", "code": "09zx9c0zc", "name": "Painted Phone Case", "description": "Product Description", "image": "painted-phone-case.jpg", "price": 56, "category": "Accessories", "quantity": 41, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1019", "code": "mnb5mb2m5", "name": "Pink Band", "description": "Product Description", "image": "pink-band.jpg", "price": 79, "category": "Fitness", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1020", "code": "r23fwf2w3", "name": "Pink Purse", "description": "Product Description", "image": "pink-purse.jpg", "price": 110, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
-        { "id": "1021", "code": "pxpzczo23", "name": "Purple Band", "description": "Product Description", "image": "purple-band.jpg", "price": 79, "category": "Fitness", "quantity": 6, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1022", "code": "2c42cb5cb", "name": "Purple Gemstone Necklace", "description": "Product Description", "image": "purple-gemstone-necklace.jpg", "price": 45, "category": "Accessories", "quantity": 62, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1023", "code": "5k43kkk23", "name": "Purple T-Shirt", "description": "Product Description", "image": "purple-t-shirt.jpg", "price": 49, "category": "Clothing", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 5 },
-        { "id": "1024", "code": "lm2tny2k4", "name": "Shoes", "description": "Product Description", "image": "shoes.jpg", "price": 64, "category": "Clothing", "quantity": 0, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1025", "code": "nbm5mv45n", "name": "Sneakers", "description": "Product Description", "image": "sneakers.jpg", "price": 78, "category": "Clothing", "quantity": 52, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1026", "code": "zx23zc42c", "name": "Teal T-Shirt", "description": "Product Description", "image": "teal-t-shirt.jpg", "price": 49, "category": "Clothing", "quantity": 3, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1027", "code": "acvx872gc", "name": "Yellow Earbuds", "description": "Product Description", "image": "yellow-earbuds.jpg", "price": 89, "category": "Electronics", "quantity": 35, "inventoryStatus": "INSTOCK", "rating": 3 },
-        { "id": "1028", "code": "tx125ck42", "name": "Yoga Mat", "description": "Product Description", "image": "yoga-mat.jpg", "price": 20, "category": "Fitness", "quantity": 15, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1029", "code": "gwuby345v", "name": "Yoga Set", "description": "Product Description", "image": "yoga-set.jpg", "price": 20, "category": "Fitness", "quantity": 25, "inventoryStatus": "INSTOCK", "rating": 8 }
-    ];
+  const { data: budgetList, loading } = useQuery(GET_BUDGETS);
+  const { componentRef, handlePrint } = useContext(BudgetContext);
 
-    useEffect(() => {
-        setProducts(data);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const [customers, setCustomers] = useState(null);
+  const [selectedCustomer3, setSelectedCustomer3] = useState(null);
+  const [globalFilter1, setGlobalFilter1] = useState(null);
+  const [globalFilter2, setGlobalFilter2] = useState(null);
+  const [globalFilter3, setGlobalFilter3] = useState(null);
+  const [openScrollModal, setOpenScrollModal] = useState(false);
 
-    const codeBodyTemplate = (rowData) => {
-        return (
-            <React.Fragment>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </React.Fragment>
-        );
+  const [budgetSelected, setBudgetSelected] = useState(null);
+
+  useEffect(() => {
+    if (!loading) {
+      let budgets = [];
+      //Formatting Date
+      budgetList.getBudget.map((e) => {
+        let tmp = {
+          ...e,
+          issueDate: formatDate(new Date(e.issueDate * 1)),
+        };
+        budgets.push(tmp);
+      });
+      setCustomers(budgets);
     }
+  }, [budgetList, loading]);
 
-    const nameBodyTemplate = (rowData) => {
-        return (
-            <React.Fragment>
-                <span className="p-column-title">Name</span>
-                {rowData.name}
-            </React.Fragment>
-        );
-    }
+  const dataTableFuncMap = {
+    globalFilter1: setGlobalFilter1,
+    globalFilter2: setGlobalFilter2,
+    globalFilter3: setGlobalFilter3,
+  };
 
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <React.Fragment>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </React.Fragment>
-        );
-    }
-
-    const quantityBodyTemplate = (rowData) => {
-        return (
-            <React.Fragment>
-                <span className="p-column-title">Quantity</span>
-                {rowData.quantity}
-            </React.Fragment>
-        );
-    }
-
+  const renderHeader = (globalFilterKey) => {
     return (
-        <div className="budget-history">
-            <div className="card">
-                <DataTable value={products}
-                    className="p-budget-history"
-                    paginator rows={10} header="Responsive">
-                    <Column field="code" header="Code" body={codeBodyTemplate} />
-                    <Column field="name" header="Name" body={nameBodyTemplate} />
-                    <Column field="category" header="Category" body={categoryBodyTemplate} />
-                    <Column field="quantity" header="Quantity" body={quantityBodyTemplate} />
-                </DataTable>
-            </div>
-        </div>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          onInput={(e) =>
+            dataTableFuncMap[`${globalFilterKey}`](e.target.value)
+          }
+          placeholder="Búsqueda Global"
+        />
+      </span>
     );
+  };
+
+  const onCustomSaveState = (state) => {
+    window.sessionStorage.setItem(
+      "dt-state-demo-custom",
+      JSON.stringify(state)
+    );
+  };
+
+  const onCustomRestoreState = () => {
+    return JSON.parse(window.sessionStorage.getItem("dt-state-demo-custom"));
+  };
+
+  ///
+  /// FUNCTIONS TO BUILD
+  ///
+
+  const handleRowClick = (el) => {
+    console.log(el);
+    console.log(el.branch);
+    console.log(el.issueDate.substr(6, 4));
+
+    setBudgetSelected(el);
+
+    // calculate totalAmount
+
+    // Open Dialog
+    setOpenScrollModal(true);
+  };
+
+  const getDay = (_date) => budgetSelected?.issueDate.substr(0, 2);
+
+  const getMonth = (_date) => budgetSelected?.issueDate.substr(3, 2);
+
+  const getYear = (_date) => budgetSelected?.issueDate.substr(6, 4);
+
+  const onContinue = () => {
+    
+    handlePrint();
+  };
+
+  const onCancel = () => setOpenScrollModal(false);
+
+  const getBudgetData = (_param) => {
+    switch (_param) {
+      case "client":
+        return budgetSelected?.client;
+      case "address":
+        return budgetSelected?.address;
+      case "city":
+        return budgetSelected?.city;
+      case "vehicle":
+        return budgetSelected?.vehicle;
+      case "brand":
+        return budgetSelected?.brand;
+      case "plate":
+        return budgetSelected?.plate;
+      default:
+        return "";
+    }
+  };
+
+  const header3 = renderHeader("globalFilter3");
+
+  if (loading) return null;
+  return (
+    <div className="budget-history">
+      <div className="card">
+        <h5>Custom Storage</h5>
+        <DataTable
+          value={customers}
+          paginator
+          rows={10}
+          header={header3}
+          globalFilter={globalFilter3}
+          selection={selectedCustomer3}
+          onSelectionChange={(e) => setSelectedCustomer3(e.value)}
+          selectionMode="single"
+          dataKey="id"
+          stateStorage="custom"
+          customSaveState={onCustomSaveState}
+          customRestoreState={onCustomRestoreState}
+          emptyMessage="No customers found."
+          onRowClick={(e) => handleRowClick(e.data)}
+        >
+          <Column
+            field="issueDate"
+            header="Fecha"
+            sortable
+            filter
+            filterPlaceholder="Fecha"
+          ></Column>
+          <Column
+            field="sequence"
+            header="# Presupuesto"
+            sortable
+            filter
+            filterPlaceholder="Presupuesto"
+          ></Column>
+          <Column
+            field="client"
+            header="Cliente"
+            sortable
+            filter
+            filterPlaceholder="Cliente"
+          ></Column>
+          <Column
+            field="plate"
+            header="Patente"
+            sortable
+            filter
+            filterPlaceholder="Patente"
+          ></Column>
+        </DataTable>
+      </div>
+      <ScrollingModal
+        open={openScrollModal}
+        setOpen={setOpenScrollModal}
+        title="Vista Preliminar Presupuesto"
+        content={
+          <BudgetPreview
+            branch={budgetSelected?.branch}
+            componentRef={componentRef}
+            getBudgetData={getBudgetData}
+            items={budgetSelected?.items}
+            sequence={budgetSelected?.sequence}
+            totalAmount={budgetSelected?.totalAmount}
+            day={getDay()}
+            month={getMonth()}
+            year={getYear()}
+          />
+        }
+        onContinue={onContinue}
+        onCancel={onCancel}
+        loading={false}
+      />
+    </div>
+  );
 }

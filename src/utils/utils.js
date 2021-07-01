@@ -1,6 +1,15 @@
 const dollarCurrency = { style: 'currency', currency: 'ARS' };
 const dollarFormat = new Intl.NumberFormat('es-ES', dollarCurrency);
 
+export function formatDate(fullDate) {
+	var year = fullDate.getUTCFullYear();
+	var month = (fullDate.getUTCMonth() + 1).toString().padStart(2, '0');
+	var day = fullDate.getUTCDate().toString().padStart(2, '0');
+	var datePublish = day + '/' + month + '/' + year;
+	return datePublish;
+}
+
+
 export function numToDollar(number) {
     return "$".concat(dollarFormat.format(number).replace('ARS', ''));
 }

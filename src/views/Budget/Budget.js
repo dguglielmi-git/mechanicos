@@ -16,7 +16,7 @@ import ScrollingModal from "../../components/Common/ScrollingModal";
 import {
   INSERT_TEMP_BUDGET,
   EMPTY_TMP_BUDGET,
-  INSERT_BUDGET
+  INSERT_BUDGET,
 } from "../../gql/budget";
 import "./Budget.scss";
 
@@ -27,15 +27,26 @@ export default function Budget(props) {
   const [insertBudget] = useMutation(INSERT_BUDGET);
   const [openValidModal, setOpenValidModal] = useState(false);
   const [openScrollModal, setOpenScrollModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
+    branch,
+    componentRef,
+    cleanFields,
     disable,
+    getBudgetData,
+    getFinalBudget,
+    handlePrint,
+    issueDateSelected,
     items,
+    printed,
+    refetchBudget,
+    sequence,
+    setPrinted,
     setDisable,
     setItems,
     setTotalAmount,
-    cleanFields,
-    getFinalBudget
+    totalAmount,
   } = useContext(BudgetContext);
 
   useEffect(() => {
@@ -70,9 +81,36 @@ export default function Budget(props) {
     }
   };
 
+  const onContinue = async () => {
+    setLoading(true);
+    try {
+      if (!printed) {
+        await persistBudget();
+        setPrinted(true);
+        handlePrint();
+      } else {
+        handlePrint();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const onCancel = async () => {
+    if (printed) {
+      refetchBudget();
+      cancelBudget();
+      setDisable(true);
+      setPrinted(false);
+    }
+    setOpenScrollModal(false);
+  };
+
   const persistBudget = async () => {
     const dataBudget = await getFinalBudget();
     dataBudget.issueDate = dataBudget.issueDate.toString();
+    dataBudget.totalAmount = totalAmount;
     try {
       await insertBudget({
         variables: {
@@ -99,7 +137,10 @@ export default function Budget(props) {
     }
   };
 
-  const PdfBudget = () => <BudgetPreview />;
+  const getDay = () => issueDateSelected?.getDate().toString().padStart(2, "0");
+  const getMonth = () =>
+    (issueDateSelected?.getMonth() + 1).toString().padStart(2, "0");
+  const getYear = () => issueDateSelected?.getFullYear();
 
   return (
     <div className="budget">
@@ -135,9 +176,22 @@ export default function Budget(props) {
         open={openScrollModal}
         setOpen={setOpenScrollModal}
         title="Vista Preliminar Presupuesto"
-        content={<PdfBudget />}
-        persistBudget={persistBudget}
-        cancelBudget={cancelBudget}
+        content={
+          <BudgetPreview
+            branch={branch}
+            componentRef={componentRef}
+            getBudgetData={getBudgetData}
+            items={items}
+            sequence={sequence}
+            totalAmount={totalAmount}
+            day={getDay()}
+            month={getMonth()}
+            year={getYear()}
+          />
+        }
+        onContinue={onContinue}
+        onCancel={onCancel}
+        loading={loading}
       />
     </div>
   );

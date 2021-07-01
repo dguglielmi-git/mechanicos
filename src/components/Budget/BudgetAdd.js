@@ -25,7 +25,7 @@ export default function BudgetAdd() {
     setInputPrice(0.0);
   };
 
-    const addItem = () => {
+  const addItem = () => {
     if (inputDesc !== "" && inputPrice > 0 && inputQuantity >0) {
       let _items = items.slice();
       let tmp = {

@@ -85,3 +85,28 @@ export const INSERT_BUDGET = gql`
     }
   }
 `;
+
+export const GET_BUDGETS = gql`
+  query getBudgets {
+    getBudget {
+      id
+      branch
+      sequence
+      client
+      address
+      city
+      vehicle
+      brand
+      plate
+      issueDate
+      totalAmount
+      items {
+        id
+        quantity
+        description
+        price
+        subtotal
+      }
+    }
+  }
+`;
