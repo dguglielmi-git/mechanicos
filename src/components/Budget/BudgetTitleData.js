@@ -29,18 +29,6 @@ export default function BudgetTitleData(props) {
     } = useContext(BudgetContext);
 
 
-
-    useEffect(() => {
-        if (disable) {
-            setClient('');
-            setAddress('');
-            setCity('');
-            setVehicle('');
-            setBrand('');
-            setPlate('');
-        }
-    }, [disable, setClient, setAddress, setCity, setVehicle, setBrand, setPlate]);
-
     useEffect(() => {
         if (getTmpbudget.length > 0) {
             setClient(getTmpbudget[0].client);
@@ -71,7 +59,7 @@ export default function BudgetTitleData(props) {
                 <h4>Datos del Cliente</h4>
                 <div className="title-data__buttons">
                     <Button disabled={disable} color="blue" onClick={() => onSave()}>
-                        <Icon name="save" />Guardar
+                        <Icon name="save" />Guardar Borrador
                     </Button>
                 </div>
             </div>

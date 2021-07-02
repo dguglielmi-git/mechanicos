@@ -3,25 +3,20 @@ import { Button, Icon } from "semantic-ui-react";
 import { BudgetContext } from "../../context/BudgetContext";
 
 export default function BudgetOptions(props) {
-  const { disable, setOpenValidModal, setOpenScrollModal } = props;
-  const { validateCompletionFields } =
-    useContext(BudgetContext);
-
-  const handleDownloadPDF = async () => {
-    if (validateCompletionFields()) {
-      setOpenScrollModal(true);
-    } else {
-      setOpenValidModal(true);
-    }
-  };
+  const { setOpenScrollModal, persistBudget } = props;
+  const { stored } = useContext(BudgetContext);
 
   return (
     <div className="budget__final-options">
       <div>
+        <Button disabled={stored} color="blue" onClick={() => persistBudget()}>
+          <Icon name="checkmark" />
+          Finalizar Presupuesto
+        </Button>
         <Button
-          disabled={disable}
+          disabled={!stored}
           color="green"
-          onClick={() => handleDownloadPDF()}
+          onClick={() => setOpenScrollModal(true)}
         >
           <Icon name="download" />
           Descargar PDF

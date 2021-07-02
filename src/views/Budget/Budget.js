@@ -33,7 +33,6 @@ export default function Budget(props) {
     branch,
     componentRef,
     cleanFields,
-    disable,
     getBudgetData,
     getFinalBudget,
     handlePrint,
@@ -41,12 +40,15 @@ export default function Budget(props) {
     items,
     printed,
     refetchBudget,
+    refetchBudgets,
     sequence,
     setPrinted,
     setDisable,
     setItems,
+    setStored,
     setTotalAmount,
     totalAmount,
+    validateCompletionFields,
   } = useContext(BudgetContext);
 
   useEffect(() => {
@@ -83,17 +85,7 @@ export default function Budget(props) {
 
   const onContinue = async () => {
     setLoading(true);
-    try {
-      if (!printed) {
-        await persistBudget();
-        setPrinted(true);
-        handlePrint();
-      } else {
-        handlePrint();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    handlePrint();
     setLoading(false);
   };
 
@@ -108,29 +100,34 @@ export default function Budget(props) {
   };
 
   const persistBudget = async () => {
-    const dataBudget = await getFinalBudget();
-    dataBudget.issueDate = dataBudget.issueDate.toString();
-    dataBudget.totalAmount = totalAmount;
-    try {
-      await insertBudget({
-        variables: {
-          input: dataBudget,
-        },
-      });
-      toast.success("El presupuesto ha sido almacenado correctamente.");
-      return true;
-    } catch (error) {
-      toast.error("No se pudo almacenar el presupuesto final.");
-      console.log(error);
-      return false;
+    if (validateCompletionFields()) {
+      const dataBudget = await getFinalBudget();
+      dataBudget.issueDate = dataBudget.issueDate.toString();
+      dataBudget.totalAmount = totalAmount;
+      try {
+        await insertBudget({
+          variables: {
+            input: dataBudget,
+          },
+        });
+        toast.success("El presupuesto ha sido almacenado correctamente.");
+        setStored(true);
+        setDisable(true);
+        await refetchBudgets();
+        return true;
+      } catch (error) {
+        toast.error("No se pudo almacenar el presupuesto final.");
+        console.log(error);
+        return false;
+      }
+    } else {
+      setOpenValidModal(true);
     }
   };
 
   const cancelBudget = async () => {
     try {
       await emptyTmpBudget();
-      setItems([]);
-      setTotalAmount(0);
       cleanFields();
     } catch (error) {
       console.log(error);
@@ -162,9 +159,8 @@ export default function Budget(props) {
         </Grid.Row>
       </Grid>
       <BudgetOptions
-        disable={disable}
-        setOpenValidModal={setOpenValidModal}
         setOpenScrollModal={setOpenScrollModal}
+        persistBudget={persistBudget}
       />
       <SimpleModal
         open={openValidModal}

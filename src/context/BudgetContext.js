@@ -2,7 +2,7 @@ import React, { createContext, useState, useRef, useEffect } from "react";
 import { size } from "lodash";
 import { useQuery } from "@apollo/client";
 import { useReactToPrint } from "react-to-print";
-import { GET_BUDGET_NUM } from "../gql/budget";
+import { GET_BUDGET_NUM, GET_BUDGETS } from "../gql/budget";
 export const BudgetContext = createContext();
 
 const MyContextProvider = (props) => {
@@ -15,6 +15,7 @@ const MyContextProvider = (props) => {
   const [brand, setBrand] = useState("");
   const [plate, setPlate] = useState("");
   const [printed, setPrinted] = useState(false);
+  const [stored, setStored] = useState(false);
 
   const [disable, setDisable] = useState(true);
   const [issueDateSelected, setIssueDateSelected] = useState(null);
@@ -31,6 +32,11 @@ const MyContextProvider = (props) => {
   const componentRef = useRef();
 
   const { data, loading, refetch: refetchBudget } = useQuery(GET_BUDGET_NUM);
+  const {
+    data: budgetList,
+    loading: loadingBudgets,
+    refetch: refetchBudgets,
+  } = useQuery(GET_BUDGETS);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -93,6 +99,8 @@ const MyContextProvider = (props) => {
     setInputDesc("");
     setIssueDateSelected(null);
     setItems([]);
+    setTotalAmount(0);
+    setStored(false);
   };
 
   const validateCompletionFields = () => {
@@ -103,7 +111,7 @@ const MyContextProvider = (props) => {
       vehicle !== "" &&
       brand !== "" &&
       plate !== "" &&
-      (issueDateSelected !== null) & (size(items) > 0)
+      (issueDateSelected !== null) && (size(items) > 0)
     ) {
       return true;
     }
@@ -114,12 +122,17 @@ const MyContextProvider = (props) => {
     <BudgetContext.Provider
       value={{
         // States
+        budgetList,
+        loadingBudgets,
+        refetchBudgets,
         printed,
         setPrinted,
         branch,
         setBranch,
         sequence,
         setSequence,
+        stored,
+        setStored,
         client,
         address,
         city,

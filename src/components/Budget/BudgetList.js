@@ -9,7 +9,7 @@ import { BudgetContext } from '../../context/BudgetContext';
 import "../../views/Budget/Budget.scss";
 
 export default function BudgetList(props) {
-    const { items, setItems, totalAmount } = useContext(BudgetContext);
+    const { items, setItems, totalAmount, disable } = useContext(BudgetContext);
 
     const deleteRow = (value) => {
         const deleteList = items.filter(val => val.id !== value["id"]);
@@ -39,7 +39,7 @@ export default function BudgetList(props) {
     const bodyMake = (value) => (
 
         <div className="options">
-            <Icon className="btn-options" name="trash" onClick={() => deleteSelected(value)} />
+            <Icon className="btn-options" name="trash" onClick={() => deleteSelected(value)} disabled={disable} />
         </div>
 
     );

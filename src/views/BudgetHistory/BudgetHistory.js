@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
-import { useQuery } from "@apollo/client";
-import { GET_BUDGETS } from "../../gql/budget";
 import { formatDate } from "../../utils/utils";
 import ScrollingModal from "../../components/Common/ScrollingModal";
 import BudgetPreview from "../../components/Budget/BudgetPreview";
@@ -11,8 +9,12 @@ import { BudgetContext } from "../../context/BudgetContext";
 import "./BudgetHistory.scss";
 
 export default function BudgetHistory() {
-  const { data: budgetList, loading } = useQuery(GET_BUDGETS);
-  const { componentRef, handlePrint } = useContext(BudgetContext);
+   const {
+    componentRef,
+    handlePrint,
+    budgetList,
+    loadingBudgets,
+  } = useContext(BudgetContext);
 
   const [customers, setCustomers] = useState(null);
   const [selectedCustomer3, setSelectedCustomer3] = useState(null);
@@ -24,7 +26,7 @@ export default function BudgetHistory() {
   const [budgetSelected, setBudgetSelected] = useState(null);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loadingBudgets) {
       let budgets = [];
       //Formatting Date
       budgetList.getBudget.map((e) => {
@@ -36,7 +38,7 @@ export default function BudgetHistory() {
       });
       setCustomers(budgets);
     }
-  }, [budgetList, loading]);
+  }, [budgetList, loadingBudgets]);
 
   const dataTableFuncMap = {
     globalFilter1: setGlobalFilter1,
@@ -70,20 +72,8 @@ export default function BudgetHistory() {
     return JSON.parse(window.sessionStorage.getItem("dt-state-demo-custom"));
   };
 
-  ///
-  /// FUNCTIONS TO BUILD
-  ///
-
   const handleRowClick = (el) => {
-    console.log(el);
-    console.log(el.branch);
-    console.log(el.issueDate.substr(6, 4));
-
     setBudgetSelected(el);
-
-    // calculate totalAmount
-
-    // Open Dialog
     setOpenScrollModal(true);
   };
 
@@ -92,11 +82,6 @@ export default function BudgetHistory() {
   const getMonth = (_date) => budgetSelected?.issueDate.substr(3, 2);
 
   const getYear = (_date) => budgetSelected?.issueDate.substr(6, 4);
-
-  const onContinue = () => {
-    
-    handlePrint();
-  };
 
   const onCancel = () => setOpenScrollModal(false);
 
@@ -121,7 +106,7 @@ export default function BudgetHistory() {
 
   const header3 = renderHeader("globalFilter3");
 
-  if (loading) return null;
+  if (loadingBudgets) return null;
   return (
     <div className="budget-history">
       <div className="card">
@@ -189,7 +174,7 @@ export default function BudgetHistory() {
             year={getYear()}
           />
         }
-        onContinue={onContinue}
+        onContinue={handlePrint}
         onCancel={onCancel}
         loading={false}
       />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useQuery } from "@apollo/client";
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +9,7 @@ import Budget from "../Budget";
 import BudgetHistory from "../BudgetHistory";
 import useAuth from "../../hooks/useAuth";
 import { GET_TMPBUDGET } from "../../gql/budget";
+import User from "../User";
 
 const drawerWidth = 240;
 
@@ -42,11 +43,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 export default function Home() {
     const { logout } = useAuth();
     const classes = useStyles();
     const [panelSelected, setPanelSelected] = useState(null);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const { data, loading } = useQuery(GET_TMPBUDGET);
 
     const handleDrawerOpen = () => {
@@ -75,10 +77,18 @@ export default function Home() {
                 setPanelSelected(<BudgetHistory />);
                 setOpen(false);
                 break;
+            case 'user':
+                setPanelSelected(<User />);
+                setOpen(false);
+                break;
             default:
                 break;
         }
     }
+
+    useEffect(() => {
+        setPanelSelected(<User />);
+    },[]);
 
     return (
         <div className={classes.root}>
