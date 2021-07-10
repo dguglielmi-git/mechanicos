@@ -38,7 +38,7 @@ It is just a template project, it must be modified and adapted for personal purp
 
 ## Version 📌
 
-Unique version.
+We used [SemVer](http://semver.org/) for versioning. Check out the whole version list available [tagsRepo](https://github.com/dguglielmi-git/mechanicos/tags).
 
 ## Author ✒️
 
