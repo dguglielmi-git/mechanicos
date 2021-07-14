@@ -141,7 +141,7 @@ export default function BudgetPreview(props) {
             />
           </div>
           <div className="client-info__label-vehicle">
-            <DivP cls="client-info__label-vehicle-caption" val="Coche" />
+            <DivP cls="client-info__label-vehicle-caption" val="Auto" />
             <DivP
               cls="client-info__label-vehicle-input"
               val={getBudgetData("vehicle")}
