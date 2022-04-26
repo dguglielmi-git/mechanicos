@@ -5,7 +5,9 @@ import { getToken } from "../utils/token";
 
 const httpLink = createUploadLink({
     //uri: 'http://192.168.100.9:4000/',
-    uri: 'https://mechanicos-server.herokuapp.com/',
+    //uri: 'https://mechanicos-server-drp.herokuapp.com/',
+    // uri: 'https://mechanicos-server.herokuapp.com/',
+    uri: 'https://mechanicosweb.herokuapp.com/',
 });
 
 const authLink = setContext((_, { headers }) => {
