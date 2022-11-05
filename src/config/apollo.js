@@ -7,8 +7,8 @@ const httpLink = createUploadLink({
   //uri: 'http://192.168.100.9:4000/',
   //uri: 'https://mechanicos-server-drp.herokuapp.com/',
   // uri: 'https://mechanicos-server.herokuapp.com/',
-  // uri: 'https://us-central1-frb-gql-mechanicos.cloudfunctions.net/graphql',
-  uri: 'http://eqfam:4000/',
+  uri: 'https://us-central1-frb-gql-mechanicos.cloudfunctions.net/graphql',
+//   uri: 'http://eqfam:4000/',
   // uri: 'https://mechanicosweb.herokuapp.com/',
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useEffect, useContext } from "react";
 import { Button, Icon, Input } from "semantic-ui-react";
 import { BudgetContext } from "../../context/BudgetContext";
 import Calendar from "../Common/Calendar";

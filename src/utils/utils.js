@@ -1,4 +1,4 @@
-import { DELAY_RETRY_FETCH } from './constants';
+import { DELAY_RETRY_FETCH, RETRY_QUERY_ATTEMPTS } from './constants';
 
 const dollarCurrency = { style: 'currency', currency: 'ARS' };
 const dollarFormat = new Intl.NumberFormat('es-ES', dollarCurrency);
@@ -58,16 +58,18 @@ export function fetchRetry(url, delay, tries, fetchOptions = {}) {
  * @param  query Fetch function to run with retry
  * @param  data Parameters for the fetch function
  * @param  tries Attempts to retry running the function received.
- * @returns 
+ * @returns
  */
-export function retryQuery(query, data, tries) {
+export function retryQuery(query, data, tries = RETRY_QUERY_ATTEMPTS) {
   function onError(err) {
     console.log('Retrying fetch...');
     let triesLeft = tries - 1;
     if (!triesLeft) {
       throw err;
     }
-    return wait(DELAY_RETRY_FETCH).then(() => retryQuery(query, data, triesLeft));
+    return wait(DELAY_RETRY_FETCH).then(() =>
+      retryQuery(query, data, triesLeft)
+    );
   }
   return query(data).catch(onError);
 }
