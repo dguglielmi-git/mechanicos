@@ -1,24 +1,25 @@
-import React, { useState, useEffect, useContext } from "react";
-import { size } from "lodash";
-import { Grid } from "semantic-ui-react";
-import { toast } from "react-toastify";
-import { useMutation } from "@apollo/client";
-import { Divider } from "primereact/divider";
-import BudgetHead from "../../components/Budget/BudgetHead";
-import BudgetTitleData from "../../components/Budget/BudgetTitleData";
-import BudgetList from "../../components/Budget/BudgetList";
-import BudgetAdd from "../../components/Budget/BudgetAdd";
-import BudgetOptions from "../../components/Budget/BudgetOptions";
-import BudgetPreview from "../../components/Budget/BudgetPreview";
-import { BudgetContext } from "../../context/BudgetContext";
-import SimpleModal from "../../components/Common/SimpleModal";
-import ScrollingModal from "../../components/Common/ScrollingModal";
+import React, { useState, useEffect, useContext } from 'react';
+import { size } from 'lodash';
+import { Grid } from 'semantic-ui-react';
+import { toast } from 'react-toastify';
+import { useMutation } from '@apollo/client';
+import { Divider } from 'primereact/divider';
+import BudgetHead from '../../components/Budget/BudgetHead';
+import BudgetTitleData from '../../components/Budget/BudgetTitleData';
+import BudgetList from '../../components/Budget/BudgetList';
+import BudgetAdd from '../../components/Budget/BudgetAdd';
+import BudgetOptions from '../../components/Budget/BudgetOptions';
+import BudgetPreview from '../../components/Budget/BudgetPreview';
+import { BudgetContext } from '../../context/BudgetContext';
+import SimpleModal from '../../components/Common/SimpleModal';
+import ScrollingModal from '../../components/Common/ScrollingModal';
+import { retryQuery } from '../../utils/utils';
 import {
   INSERT_TEMP_BUDGET,
   EMPTY_TMP_BUDGET,
   INSERT_BUDGET,
-} from "../../gql/budget";
-import "./Budget.scss";
+} from '../../gql/budget';
+import './Budget.scss';
 
 export default function Budget(props) {
   const { getTmpbudget } = props;
@@ -71,14 +72,23 @@ export default function Budget(props) {
 
   const persistTempBudget = async (clientData) => {
     try {
-      await insertTmpBudget({
-        variables: {
-          input: clientData,
+      // await insertTmpBudget({
+      //   variables: {
+      //     input: clientData,
+      //   },
+      // });
+      await retryQuery(
+        insertTmpBudget,
+        {
+          variables: {
+            input: clientData,
+          },
         },
-      });
-      toast.success("Se ha guardado correctamente el presupuesto.");
+        6
+      );
+      toast.success('Se ha guardado correctamente el presupuesto.');
     } catch (error) {
-      toast.error("No se pudo guardar el Presupuesto.");
+      toast.error('No se pudo guardar el Presupuesto.');
       console.log(error);
     }
   };
@@ -105,18 +115,27 @@ export default function Budget(props) {
       dataBudget.issueDate = dataBudget.issueDate.toString();
       dataBudget.totalAmount = totalAmount;
       try {
-        await insertBudget({
-          variables: {
-            input: dataBudget,
+        // await insertBudget({
+        //   variables: {
+        //     input: dataBudget,
+        //   },
+        // });
+        await retryQuery(
+          insertBudget,
+          {
+            variables: {
+              input: dataBudget,
+            },
           },
-        });
-        toast.success("El presupuesto ha sido almacenado correctamente.");
+          6
+        );
+        toast.success('El presupuesto ha sido almacenado correctamente.');
         setStored(true);
         setDisable(true);
         await refetchBudgets();
         return true;
       } catch (error) {
-        toast.error("No se pudo almacenar el presupuesto final.");
+        toast.error('No se pudo almacenar el presupuesto final.');
         console.log(error);
         return false;
       }
@@ -127,16 +146,17 @@ export default function Budget(props) {
 
   const cancelBudget = async () => {
     try {
-      await emptyTmpBudget();
+      // await emptyTmpBudget();
+      await retryQuery(emptyTmpBudget, null, 6);
       cleanFields();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getDay = () => issueDateSelected?.getDate().toString().padStart(2, "0");
+  const getDay = () => issueDateSelected?.getDate().toString().padStart(2, '0');
   const getMonth = () =>
-    (issueDateSelected?.getMonth() + 1).toString().padStart(2, "0");
+    (issueDateSelected?.getMonth() + 1).toString().padStart(2, '0');
   const getYear = () => issueDateSelected?.getFullYear();
 
   return (

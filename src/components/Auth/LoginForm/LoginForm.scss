@@ -20,6 +20,11 @@
 }
 
 .login-form {
+  &__loader {
+    display: flex;
+    justify-content: center;
+  }
+
   input {
     background-color: black !important;
     color: aquamarine !important;

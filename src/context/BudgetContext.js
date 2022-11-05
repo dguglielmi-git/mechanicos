@@ -50,8 +50,8 @@ const MyContextProvider = (props) => {
     (async () => {
       if (!loading) {
         const { getBudgetnums } = await data;
-        setBranch(getBudgetnums.branch);
-        setSequence(getBudgetnums.sequence);
+        setBranch(getBudgetnums?.branch);
+        setSequence(getBudgetnums?.sequence);
       }
     })();
   }, [data, loading]);
