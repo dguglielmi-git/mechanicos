@@ -27,16 +27,15 @@ export default function BudgetHistory() {
 
   useEffect(() => {
     if (!loadingBudgets) {
-      let budgets = [];
-      //Formatting Date
-      budgetList.getBudget.map((e) => {
-        let tmp = {
+      if (budgetList?.getBudget) {
+        const budgets = budgetList.getBudget.map((e) => ({
           ...e,
           issueDate: formatDate(new Date(e.issueDate * 1)),
-        };
-        budgets.push(tmp);
-      });
-      setCustomers(budgets);
+        }));
+        setCustomers(budgets);
+      } else {
+        setCustomers([]);
+      }
     }
   }, [budgetList, loadingBudgets]);
 

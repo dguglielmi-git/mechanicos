@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
@@ -67,12 +66,10 @@ export default function Home() {
         switch (selected) {
             case 'budget':
                 if (loading) return null;
-                else {
-                    const { getTmpbudget } = data;
-                    setPanelSelected(<Budget getTmpbudget={getTmpbudget} />);
-                    setOpen(false);
-                }
-                break
+                const getTmpbudget = data?.getTmpbudget ?? [];
+                setPanelSelected(<Budget getTmpbudget={getTmpbudget} />);
+                setOpen(false);
+                break;
             case 'budget-history':
                 setPanelSelected(<BudgetHistory />);
                 setOpen(false);
