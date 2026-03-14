@@ -1,28 +1,29 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { size } from 'lodash';
-import { Grid } from 'semantic-ui-react';
-import { toast } from 'react-toastify';
-import { useMutation } from '@apollo/client';
-import { Divider } from 'primereact/divider';
-import BudgetHead from '../../components/Budget/BudgetHead';
-import BudgetTitleData from '../../components/Budget/BudgetTitleData';
-import BudgetList from '../../components/Budget/BudgetList';
-import BudgetAdd from '../../components/Budget/BudgetAdd';
-import BudgetOptions from '../../components/Budget/BudgetOptions';
-import BudgetPreview from '../../components/Budget/BudgetPreview';
-import { BudgetContext } from '../../context/BudgetContext';
-import SimpleModal from '../../components/Common/SimpleModal';
-import ScrollingModal from '../../components/Common/ScrollingModal';
-import { retryQuery } from '../../utils/utils';
+import React, { useState, useEffect } from "react";
+import { size } from "lodash";
+import { Grid } from "semantic-ui-react";
+import { toast } from "react-toastify";
+import { useMutation } from "@apollo/client";
+import { Divider } from "primereact/divider";
+import BudgetHead from "../../components/Budget/BudgetHead";
+import BudgetTitleData from "../../components/Budget/BudgetTitleData";
+import BudgetList from "../../components/Budget/BudgetList";
+import BudgetAdd from "../../components/Budget/BudgetAdd";
+import BudgetOptions from "../../components/Budget/BudgetOptions";
+import BudgetPreview from "../../components/Budget/BudgetPreview";
+import { useBudgetContext } from "../../context/BudgetContext";
+import SimpleModal from "../../components/Common/SimpleModal";
+import ScrollingModal from "../../components/Common/ScrollingModal";
+import { retryQuery } from "../../utils/utils";
 import {
   INSERT_TEMP_BUDGET,
   EMPTY_TMP_BUDGET,
   INSERT_BUDGET,
-} from '../../gql/budget';
-import './Budget.scss';
+} from "../../gql/budget";
+import { TmpBudget } from "../../components/Budget/interfaces";
+import { BudgetProps } from "./interfaces";
+import "./Budget.scss";
 
-export default function Budget(props) {
-  const { getTmpbudget } = props;
+export default function Budget({ getTmpbudget }: BudgetProps): React.ReactElement {
   const [insertTmpBudget] = useMutation(INSERT_TEMP_BUDGET);
   const [emptyTmpBudget] = useMutation(EMPTY_TMP_BUDGET);
   const [insertBudget] = useMutation(INSERT_BUDGET);
@@ -50,33 +51,26 @@ export default function Budget(props) {
     setTotalAmount,
     totalAmount,
     validateCompletionFields,
-  } = useContext(BudgetContext);
+  } = useBudgetContext();
 
   useEffect(() => {
     if (getTmpbudget.length > 0) {
-      setItems(getTmpbudget[0].items);
+      setItems(getTmpbudget[0].items ?? []);
       setDisable(false);
     }
-  }, []);
+  }, [getTmpbudget, setItems, setDisable]);
 
   useEffect(() => {
-    (async () => {
-      if (size(items) > 0) {
-        const sum = items.reduce((sum, item) => sum + item.subtotal, 0);
-        setTotalAmount(sum);
-      } else {
-        setTotalAmount(0);
-      }
-    })();
+    if (size(items) > 0) {
+      const sum = items.reduce((acc, item) => acc + item.subtotal, 0);
+      setTotalAmount(sum);
+    } else {
+      setTotalAmount(0);
+    }
   }, [items, setTotalAmount]);
 
-  const persistTempBudget = async (clientData) => {
+  const persistTempBudget = async (clientData: TmpBudget): Promise<void> => {
     try {
-      // await insertTmpBudget({
-      //   variables: {
-      //     input: clientData,
-      //   },
-      // });
       await retryQuery(
         insertTmpBudget,
         {
@@ -86,57 +80,64 @@ export default function Budget(props) {
         },
         6
       );
-      toast.success('Se ha guardado correctamente el presupuesto.');
+      toast.success("Se ha guardado correctamente el presupuesto.");
     } catch (error) {
-      toast.error('No se pudo guardar el Presupuesto.');
-      console.log(error);
+      toast.error("No se pudo guardar el Presupuesto.");
+      console.error(error);
     }
   };
 
-  const onContinue = async () => {
+  const onContinue = async (): Promise<void> => {
     setLoading(true);
     handlePrint();
     setLoading(false);
   };
 
-  const onCancel = async () => {
+  const cancelBudget = async (): Promise<void> => {
+    try {
+      await retryQuery(emptyTmpBudget, null, 6);
+      cleanFields();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onCancel = async (): Promise<void> => {
     if (printed) {
       refetchBudget();
-      cancelBudget();
+      await cancelBudget();
       setDisable(true);
       setPrinted(false);
     }
     setOpenScrollModal(false);
   };
 
-  const persistBudget = async () => {
+  const persistBudget = async (): Promise<boolean | void> => {
     if (validateCompletionFields()) {
       const dataBudget = await getFinalBudget();
-      dataBudget.issueDate = dataBudget.issueDate.toString();
-      dataBudget.totalAmount = totalAmount;
+      const inputData = {
+        ...dataBudget,
+        issueDate: dataBudget.issueDate?.toString() ?? "",
+        totalAmount,
+      };
       try {
-        // await insertBudget({
-        //   variables: {
-        //     input: dataBudget,
-        //   },
-        // });
         await retryQuery(
           insertBudget,
           {
             variables: {
-              input: dataBudget,
+              input: inputData,
             },
           },
           6
         );
-        toast.success('El presupuesto ha sido almacenado correctamente.');
+        toast.success("El presupuesto ha sido almacenado correctamente.");
         setStored(true);
         setDisable(true);
         await refetchBudgets();
         return true;
       } catch (error) {
-        toast.error('No se pudo almacenar el presupuesto final.');
-        console.log(error);
+        toast.error("No se pudo almacenar el presupuesto final.");
+        console.error(error);
         return false;
       }
     } else {
@@ -144,20 +145,17 @@ export default function Budget(props) {
     }
   };
 
-  const cancelBudget = async () => {
-    try {
-      // await emptyTmpBudget();
-      await retryQuery(emptyTmpBudget, null, 6);
-      cleanFields();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getDay = () => issueDateSelected?.getDate().toString().padStart(2, '0');
-  const getMonth = () =>
-    (issueDateSelected?.getMonth() + 1).toString().padStart(2, '0');
-  const getYear = () => issueDateSelected?.getFullYear();
+  const getDay = (): string =>
+    issueDateSelected
+      ?.getDate()
+      .toString()
+      .padStart(2, "0") ?? "";
+  const getMonth = (): string =>
+    (issueDateSelected
+      ? (issueDateSelected.getMonth() + 1).toString().padStart(2, "0")
+      : "") ?? "";
+  const getYear = (): string | number =>
+    issueDateSelected?.getFullYear() ?? "";
 
   return (
     <div className="budget">

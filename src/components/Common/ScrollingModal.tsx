@@ -3,19 +3,19 @@ import Pdf from "react-to-pdf";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Icon, Modal } from "semantic-ui-react";
 import { BudgetContext } from "../../context/BudgetContext";
+import { ScrollingModalProps } from "./interfaces";
 
-const ScrollingModal = (props) => {
-  const {
-    open,
-    setOpen,
-    title,
-    content,
-    btnCaption,
-    onContinue,
-    onCancel,
-    loading,
-  } = props;
-  const { pdfRef } = useContext(BudgetContext);
+export default function ScrollingModal({
+  open,
+  setOpen,
+  title,
+  content,
+  btnCaption,
+  onContinue,
+  onCancel,
+  loading,
+}: ScrollingModalProps): React.ReactElement {
+  const { pdfRef } = useContext(BudgetContext)!;
 
   return (
     <Modal
@@ -29,20 +29,18 @@ const ScrollingModal = (props) => {
         <Modal.Description>{content}</Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={() => onCancel()} negative>
+        <Button onClick={onCancel} negative>
           <Icon name="cancel" /> Cerrar
         </Button>
         <Pdf targetRef={pdfRef} filename={`${uuidv4()}.pdf`}>
-          {({ toPdf }) => (
-            <Button onClick={() => onContinue()} primary loading={loading}>
+          {() => (
+            <Button onClick={onContinue} primary loading={loading}>
               <Icon name="print" />
-              {btnCaption ? btnCaption : "Imprimir"}
+              {btnCaption ?? "Imprimir"}
             </Button>
           )}
         </Pdf>
       </Modal.Actions>
     </Modal>
   );
-};
-
-export default ScrollingModal;
+}

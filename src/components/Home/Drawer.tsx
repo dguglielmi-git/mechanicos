@@ -20,8 +20,15 @@ import PeopleIcon from "@material-ui/icons/People";
 import BuildIcon from "@material-ui/icons/Build";
 
 import { MENU_ITEMS } from "../../config/menuConfig";
+import {
+  DrawerProps,
+  IconKey,
+  MenuItem,
+  MenuItemChild,
+  PanelAction,
+} from "./interfaces";
 
-const ICON_MAP = {
+const ICON_MAP: Record<IconKey, React.ComponentType> = {
   PostAdd: PostAddIcon,
   ExitToApp: ExitToAppIcon,
   PlaylistAddCheck: PlaylistAddCheckIcon,
@@ -52,13 +59,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Draw(props) {
-  const { logout, open, handleDrawerClose, panelSelector } = props;
+export default function Draw({
+  logout,
+  open,
+  handleDrawerClose,
+  panelSelector,
+}: DrawerProps): React.ReactElement {
   const classes = useStyles();
   const theme = useTheme();
 
-  const getInitialOpenState = useCallback(() => {
-    return MENU_ITEMS.reduce((acc, item) => {
+  const getInitialOpenState = useCallback((): Record<number, boolean> => {
+    return MENU_ITEMS.reduce<Record<number, boolean>>((acc, item) => {
       if (item.children && item.defaultOpen) {
         acc[item.id] = true;
       }
@@ -66,29 +77,34 @@ export default function Draw(props) {
     }, {});
   }, []);
 
-  const [openMenus, setOpenMenus] = useState(getInitialOpenState);
+  const [openMenus, setOpenMenus] = useState<Record<number, boolean>>(
+    getInitialOpenState
+  );
 
   const handleMenuAction = useCallback(
-    (action) => {
+    (action: string): void => {
       if (action === "logout") {
         logout();
       } else {
-        panelSelector(action);
+        panelSelector(action as PanelAction);
       }
     },
     [logout, panelSelector]
   );
 
-  const toggleMenu = (id) => {
+  const toggleMenu = (id: number): void => {
     setOpenMenus((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const renderMenuItem = (item) => {
-    const IconComponent = ICON_MAP[item.icon];
-    const hasChildren = item.children && item.children.length > 0;
+  const renderMenuItem = (item: MenuItem | MenuItemChild): React.ReactNode => {
+    const IconComponent = item.icon
+      ? ICON_MAP[item.icon as IconKey]
+      : undefined;
+    const hasChildren =
+      "children" in item && item.children && item.children.length > 0;
     const isOpen = openMenus[item.id];
 
-    if (hasChildren) {
+    if (hasChildren && "children" in item) {
       return (
         <React.Fragment key={item.id}>
           <ListItem button onClick={() => toggleMenu(item.id)}>
@@ -100,7 +116,7 @@ export default function Draw(props) {
           </ListItem>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {item.children.map((child) => renderMenuItem(child))}
+              {item.children!.map((child) => renderMenuItem(child))}
             </List>
           </Collapse>
         </React.Fragment>
@@ -111,8 +127,10 @@ export default function Draw(props) {
       <ListItem
         key={item.id}
         button
-        className={item.level > 0 ? classes.nested : undefined}
-        onClick={() => item.action && handleMenuAction(item.action)}
+        className={"level" in item && item.level > 0 ? classes.nested : undefined}
+        onClick={() =>
+          "action" in item && item.action && handleMenuAction(item.action)
+        }
       >
         <ListItemIcon>
           {IconComponent && <IconComponent />}

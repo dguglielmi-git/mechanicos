@@ -1,10 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button, Icon } from "semantic-ui-react";
-import { BudgetContext } from "../../context/BudgetContext";
+import { useBudgetContext } from "../../context/BudgetContext";
 
-export default function BudgetOptions(props) {
-  const { setOpenScrollModal, persistBudget } = props;
-  const { stored } = useContext(BudgetContext);
+interface BudgetOptionsProps {
+  setOpenScrollModal: (open: boolean) => void;
+  persistBudget: () => Promise<boolean | void>;
+}
+
+export default function BudgetOptions({
+  setOpenScrollModal,
+  persistBudget,
+}: BudgetOptionsProps): React.ReactElement {
+  const { stored } = useBudgetContext();
 
   return (
     <div className="budget__final-options">

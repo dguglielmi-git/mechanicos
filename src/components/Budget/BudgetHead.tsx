@@ -1,25 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Button, Icon, Grid } from "semantic-ui-react";
-import { BudgetContext } from "../../context/BudgetContext";
+import { useBudgetContext } from "../../context/BudgetContext";
 import { toast } from "react-toastify";
 
-export default function BudgetHeader(props) {
-  const { cancelBudget } = props;
+interface BudgetHeadProps {
+  cancelBudget: () => Promise<void>;
+}
+
+export default function BudgetHead({
+  cancelBudget,
+}: BudgetHeadProps): React.ReactElement {
   const { disable, setDisable, cleanFields, refetchBudget } =
-    useContext(BudgetContext);
+    useBudgetContext();
 
-  const toggleBudget = () => {
-    if (!disable) {
-      cancelForm();
-    } else {
-      setDisable(!disable);
-      cleanFields();
-      refetchBudget();
-    }
-  };
-
-  const accept = (param) => {
+  const accept = (param: boolean): void => {
     if (param) {
       cancelBudget();
       setDisable(!disable);
@@ -29,22 +24,23 @@ export default function BudgetHeader(props) {
     }
   };
 
-  const reject = () => {
+  const reject = (): void => {
     toast.info("Operacion Cancelada");
   };
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     confirmDialog({
-      message: "Esta seguro de eliminar todos los valores del formulario?",
+      message:
+        "Esta seguro de eliminar todos los valores del formulario?",
       header: "Confirmar Reinicio del Formulario",
       icon: "pi pi-info-circle",
       acceptClassName: "p-button-danger",
-      accept,
+      accept: () => accept(false),
       reject,
     });
   };
 
-  const cancelForm = () => {
+  const cancelForm = (): void => {
     confirmDialog({
       message:
         "Si cancela el formulario se perderan todos los datos cargados. Seguro quiere avanzar?",
@@ -54,6 +50,16 @@ export default function BudgetHeader(props) {
       accept: () => accept(true),
       reject,
     });
+  };
+
+  const toggleBudget = (): void => {
+    if (!disable) {
+      cancelForm();
+    } else {
+      setDisable(!disable);
+      cleanFields();
+      refetchBudget();
+    }
   };
 
   return (
@@ -70,12 +76,12 @@ export default function BudgetHeader(props) {
           <div className="budget__head">
             <Button
               color={disable ? "green" : "red"}
-              onClick={() => toggleBudget()}
+              onClick={toggleBudget}
             >
               <Icon name={disable ? "plus" : "cancel"} />
               {disable ? "Nuevo Presupuesto" : "Cancelar"}
             </Button>
-            <Button disabled={disable} color="blue" onClick={() => resetForm()}>
+            <Button disabled={disable} color="blue" onClick={resetForm}>
               <Icon name="file outline" />
               Reiniciar Formulario
             </Button>

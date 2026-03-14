@@ -4,67 +4,88 @@ import { v4 as uuidv4 } from "uuid";
 import { Image } from "semantic-ui-react";
 import Logo from "../../assets/logo-bw.png";
 import { numToDollarRounded } from "../../utils/utils";
+import { BudgetItem, BudgetDataParam } from "./interfaces";
+import { RefObject } from "react";
 
-export default function BudgetPreview(props) {
-  const {
-    branch,
-    componentRef,
-    getBudgetData,
-    items,
-    sequence,
-    totalAmount,
-    day,
-    month,
-    year,
-  } = props;
-  const [itemList, setItemList] = useState([]);
+interface BudgetPreviewItem {
+  id: string;
+  quantity: number | null;
+  description: string;
+  price: number | null;
+  subtotal: number | null;
+}
 
-  // Validate size of item list
+interface BudgetPreviewProps {
+  branch: number;
+  componentRef: RefObject<HTMLDivElement | null>;
+  getBudgetData: (param: BudgetDataParam) => string;
+  items: BudgetItem[];
+  sequence: number;
+  totalAmount: number;
+  day?: string;
+  month?: string;
+  year?: string | number;
+}
+
+interface DivComponentProps {
+  cls: string;
+  val: string | number | null;
+}
+
+const DivP = ({ cls, val }: DivComponentProps): React.ReactElement => (
+  <div className={cls}>
+    <p>{val}</p>
+  </div>
+);
+
+const DivH4 = ({ cls, val }: DivComponentProps): React.ReactElement => (
+  <div className={cls}>
+    <h4>{val}</h4>
+  </div>
+);
+
+export default function BudgetPreview({
+  branch,
+  componentRef,
+  getBudgetData,
+  items,
+  sequence,
+  totalAmount,
+  day = "",
+  month = "",
+  year = "",
+}: BudgetPreviewProps): React.ReactElement {
+  const [itemList, setItemList] = useState<BudgetPreviewItem[]>([]);
+
   useEffect(() => {
     if (size(items) < 25) {
-      let start = size(items);
-      let _items = items.slice();
+      const start = size(items);
+      const _items: BudgetPreviewItem[] = items.slice();
 
       for (let i = start; i < 25; i++) {
-        let template = {
+        _items.push({
           id: uuidv4(),
           quantity: null,
           description: "",
           price: null,
           subtotal: null,
-        };
-        _items.push(template);
+        });
       }
       setItemList(_items);
     }
   }, [items]);
 
-  const DivP = ({ cls, val }) => (
-    <div className={cls}>
-      <p>{val}</p>
-    </div>
-  );
-
-  const DivH4 = ({ cls, val }) => (
-    <div className={cls}>
-      <h4>{val}</h4>
-    </div>
-  );
-
   return (
     <div>
-      <div className="budget-preview" ref={componentRef}>
+      <div className="budget-preview" ref={componentRef as React.RefObject<HTMLDivElement>}>
         <div className="header-letter">
           <p>X</p>
         </div>
         <div className="header-budget">
           <div className="header-budget__left-box">
             <div className="left-box-title">
-              <Image src={Logo} height="60px" />
-              <DivP
-                cls="left-box-title__label"
-                val="de Juan Carlos Guglielmi"
-              />
+              <Image src={Logo} alt="Logo" style={{ height: "60px" }} />
+              <DivP cls="left-box-title__label" val="de Juan Carlos Guglielmi" />
               <DivP
                 cls="left-box-title__address"
                 val="Blas Parera 710 - Villa Bosch"
@@ -87,11 +108,7 @@ export default function BudgetPreview(props) {
                 <DivP cls="right-box-title__invoice-caption" val="Nº" />
                 <DivP
                   cls="right-box-title__invoice-number"
-                  val={
-                    branch.toString().padStart(4, "0") +
-                    "-" +
-                    sequence.toString().padStart(8, "0")
-                  }
+                  val={`${branch.toString().padStart(4, "0")}-${sequence.toString().padStart(8, "0")}`}
                 />
               </div>
               <div className="right-box-title__date">
@@ -120,10 +137,7 @@ export default function BudgetPreview(props) {
         <div className="client-info">
           <div className="client-info__label-mr">
             <DivP cls="client-info__label-mr-caption" val="Señor(es)" />
-            <DivP
-              cls="client-info__label-mr-input"
-              val={getBudgetData("client")}
-            />
+            <DivP cls="client-info__label-mr-input" val={getBudgetData("client")} />
           </div>
           <div className="client-info__label-address">
             <DivP cls="client-info__label-address-caption" val="Domicilio" />
@@ -168,16 +182,18 @@ export default function BudgetPreview(props) {
         </div>
         <div className="items-detail">
           {itemList.map((el, index) => (
-            <div className="items-detail__row" key={index}>
+            <div className="items-detail__row" key={el.id}>
               <DivH4 cls="items-detail__row-quantity" val={el.quantity} />
               <DivH4 cls="items-detail__row-description" val={el.description} />
               <DivH4
                 cls="items-detail__row-unit"
-                val={el.price && numToDollarRounded(el.price)}
+                val={el.price != null ? numToDollarRounded(el.price) : null}
               />
               <DivH4
                 cls="items-detail__row-subtotal"
-                val={el.subtotal && numToDollarRounded(el.subtotal)}
+                val={
+                  el.subtotal != null ? numToDollarRounded(el.subtotal) : null
+                }
               />
             </div>
           ))}
@@ -186,7 +202,7 @@ export default function BudgetPreview(props) {
           <DivH4 cls="budget-summary__caption" val="TOTAL" />
           <DivH4
             cls="budget-summary__figure"
-            val={totalAmount && numToDollarRounded(totalAmount)}
+            val={totalAmount ? numToDollarRounded(totalAmount) : null}
           />
         </div>
         <DivP

@@ -1,0 +1,40 @@
+export interface AppBarProps {
+  open: boolean;
+  handleDrawerOpen: () => void;
+}
+
+export interface MenuItemChild {
+  id: number;
+  label: string;
+  icon?: string;
+  level: number;
+  action?: string;
+}
+
+export interface MenuItem {
+  id: number;
+  label: string;
+  icon?: string;
+  level: number;
+  defaultOpen?: boolean;
+  children?: MenuItemChild[];
+  action?: string;
+  dividerBefore?: boolean;
+}
+
+export type PanelAction = "budget" | "budget-history" | "user";
+
+export interface DrawerProps {
+  logout: () => void;
+  open: boolean;
+  handleDrawerClose: () => void;
+  panelSelector: (action: PanelAction) => void;
+}
+
+export type IconKey =
+  | "PostAdd"
+  | "ExitToApp"
+  | "PlaylistAddCheck"
+  | "Receipt"
+  | "People"
+  | "Build";
