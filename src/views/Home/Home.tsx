@@ -7,6 +7,8 @@ import AppBar from "../../components/Home/AppBar";
 import Drawer from "../../components/Home/Drawer";
 import Budget from "../Budget";
 import BudgetHistory from "../BudgetHistory";
+import ClientCreate from "../ClientCreate";
+import ClientList from "../ClientList";
 import useAuth from "../../hooks/useAuth";
 import { GET_TMPBUDGET } from "../../gql/budget";
 import User from "../User";
@@ -69,6 +71,14 @@ export default function Home(): React.ReactElement {
 
   const panelSelector = (selected: PanelAction): void => {
     switch (selected) {
+      case "client-create":
+        setPanelSelected(<ClientCreate />);
+        setOpen(false);
+        break;
+      case "client-list":
+        setPanelSelected(<ClientList />);
+        setOpen(false);
+        break;
       case "budget":
         if (loading) return;
         const getTmpbudget: TmpBudget[] = data?.getTmpbudget ?? [];

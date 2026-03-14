@@ -22,7 +22,12 @@ export interface MenuItem {
   dividerBefore?: boolean;
 }
 
-export type PanelAction = "budget" | "budget-history" | "user";
+export type PanelAction =
+  | "client-create"
+  | "client-list"
+  | "budget"
+  | "budget-history"
+  | "user";
 
 export interface DrawerProps {
   logout: () => void;

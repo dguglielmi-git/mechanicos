@@ -9,6 +9,7 @@ export default function IconCalendar({
   dateSelected,
   setDateSelected,
   disabled,
+  className,
 }: CalendarProps): React.ReactElement {
   const today = new Date();
   const month = today.getMonth();
@@ -73,7 +74,10 @@ export default function IconCalendar({
   });
 
   return (
-    <div className="p-field p-md-8" style={{ marginBottom: "5px" }}>
+    <div
+      className={className ? `p-field ${className}` : "p-field"}
+      style={className ? undefined : { marginBottom: "5px" }}
+    >
       <Calendar
         id="icon"
         value={dateSelected ?? undefined}

@@ -1,0 +1,106 @@
+@import '../../scss/index.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+$field-height: 33px;
+$form-max-width: 600px;
+$row-gap: 16px;
+$col-gap: 16px;
+
+.client-create {
+  .client-create__title {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 10px;
+
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  }
+
+  &__form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-fields {
+      width: 100%;
+      max-width: $form-max-width;
+
+      .client-create__form-row {
+        display: flex;
+        align-items: flex-start;
+        gap: $col-gap;
+        margin-bottom: $row-gap;
+
+        @media (max-width: $breakpoint-tablet) {
+          flex-direction: column;
+          gap: 0;
+          margin-bottom: $row-gap;
+
+          .client-create__field {
+            margin-bottom: $row-gap;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+
+          @media (max-width: $breakpoint-tablet) {
+            .client-create__field:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        &.client-create__form-row--full {
+          .client-create__field {
+            flex: 1;
+          }
+        }
+      }
+
+      .client-create__field {
+        flex: 1;
+        min-width: 0;
+
+        .ui.input,
+        .ui.input input {
+          width: 100% !important;
+          height: $field-height !important;
+          min-height: $field-height !important;
+        }
+
+        .ui.input input {
+          box-sizing: border-box;
+        }
+
+        &.client-create__field-date {
+          width: 100%;
+          min-width: 0;
+
+          .date-picker {
+            height: $field-height;
+
+            &__input {
+              height: $field-height !important;
+              min-height: $field-height !important;
+            }
+          }
+        }
+      }
+    }
+
+    &-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

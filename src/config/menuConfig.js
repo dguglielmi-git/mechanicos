@@ -4,23 +4,40 @@ export const MENU_ITEMS = [
     label: "Clientes",
     icon: "People",
     level: 0,
+    defaultOpen: false,
+    children: [
+      {
+        id: 2,
+        label: "Alta de Cliente",
+        icon: "PostAdd",
+        level: 1,
+        action: "client-create",
+      },
+      {
+        id: 3,
+        label: "Listado de Clientes",
+        icon: "PlaylistAddCheck",
+        level: 1,
+        action: "client-list",
+      },
+    ],
   },
   {
-    id: 2,
+    id: 4,
     label: "Presupuestos",
     icon: "Receipt",
     level: 0,
     defaultOpen: true,
     children: [
       {
-        id: 3,
+        id: 5,
         label: "Nuevo",
         icon: "PostAdd",
         level: 1,
         action: "budget",
       },
       {
-        id: 4,
+        id: 6,
         label: "Histórico",
         icon: "PlaylistAddCheck",
         level: 1,
@@ -29,20 +46,20 @@ export const MENU_ITEMS = [
     ],
   },
   {
-    id: 5,
+    id: 7,
     label: "Trabajos",
     icon: "Build",
     level: 0,
     defaultOpen: false,
     children: [
       {
-        id: 6,
+        id: 8,
         label: "Nuevo",
         icon: "PostAdd",
         level: 1,
       },
       {
-        id: 7,
+        id: 9,
         label: "Histórico",
         icon: "PlaylistAddCheck",
         level: 1,
@@ -50,7 +67,7 @@ export const MENU_ITEMS = [
     ],
   },
   {
-    id: 8,
+    id: 10,
     label: "Salir",
     icon: "ExitToApp",
     level: 0,
