@@ -1,6 +1,8 @@
 export interface Client {
   id?: string;
-  nombre: string;
-  apellido: string;
+  matricula: string;
+  propietario: string;
+  modelo: string;
+  anio: string;
   email: string;
 }

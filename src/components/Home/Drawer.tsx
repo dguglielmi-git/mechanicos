@@ -18,6 +18,7 @@ import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import PeopleIcon from "@material-ui/icons/People";
 import BuildIcon from "@material-ui/icons/Build";
+import TrackChangesIcon from "@material-ui/icons/TrackChanges";
 
 import { MENU_ITEMS } from "../../config/menuConfig";
 import {
@@ -35,6 +36,7 @@ const ICON_MAP: Record<IconKey, React.ComponentType> = {
   Receipt: ReceiptIcon,
   People: PeopleIcon,
   Build: BuildIcon,
+  TrackChanges: TrackChangesIcon,
 };
 
 const drawerWidth = 240;

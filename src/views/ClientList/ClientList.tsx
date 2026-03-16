@@ -35,8 +35,10 @@ export default function ClientList(): React.ReactElement {
       </div>
       <div className="client-list__table">
         <DataTable value={clients} emptyMessage="No hay clientes registrados.">
-          <Column field="nombre" header="Nombre" />
-          <Column field="apellido" header="Apellido" />
+          <Column field="matricula" header="Matrícula" />
+          <Column field="propietario" header="Propietario" />
+          <Column field="modelo" header="Modelo" />
+          <Column field="anio" header="Año" />
           <Column field="email" header="Email" />
         </DataTable>
       </div>

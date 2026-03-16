@@ -6,8 +6,10 @@ import { ClientFormData } from "./interfaces";
 import "./ClientCreate.scss";
 
 const initialFormState: ClientFormData = {
-  nombre: "",
-  apellido: "",
+  matricula: "",
+  propietario: "",
+  modeloAuto: "",
+  anioAuto: "",
   dni: "",
   cuilCuit: "",
   fechaNacimiento: null,
@@ -49,15 +51,29 @@ export default function ClientCreate(): React.ReactElement {
               <div className="client-create__form-fields">
                 <div className="client-create__form-row">
                   <Input
-                    placeholder="Nombre"
-                    value={formData.nombre}
-                    onChange={(_, data) => updateField("nombre", data.value)}
+                    placeholder="Matrícula"
+                    value={formData.matricula}
+                    onChange={(_, data) => updateField("matricula", data.value)}
                     className="client-create__field"
                   />
                   <Input
-                    placeholder="Apellido"
-                    value={formData.apellido}
-                    onChange={(_, data) => updateField("apellido", data.value)}
+                    placeholder="Propietario"
+                    value={formData.propietario}
+                    onChange={(_, data) => updateField("propietario", data.value)}
+                    className="client-create__field"
+                  />
+                </div>
+                <div className="client-create__form-row">
+                  <Input
+                    placeholder="Modelo auto"
+                    value={formData.modeloAuto}
+                    onChange={(_, data) => updateField("modeloAuto", data.value)}
+                    className="client-create__field"
+                  />
+                  <Input
+                    placeholder="Año auto"
+                    value={formData.anioAuto}
+                    onChange={(_, data) => updateField("anioAuto", data.value)}
                     className="client-create__field"
                   />
                 </div>

@@ -9,6 +9,8 @@ import Budget from "../Budget";
 import BudgetHistory from "../BudgetHistory";
 import ClientCreate from "../ClientCreate";
 import ClientList from "../ClientList";
+import WorkCreate from "../WorkCreate";
+import WorkTracking from "../WorkTracking/WorkTracking";
 import useAuth from "../../hooks/useAuth";
 import { GET_TMPBUDGET } from "../../gql/budget";
 import User from "../User";
@@ -87,6 +89,14 @@ export default function Home(): React.ReactElement {
         break;
       case "budget-history":
         setPanelSelected(<BudgetHistory />);
+        setOpen(false);
+        break;
+      case "work-create":
+        setPanelSelected(<WorkCreate />);
+        setOpen(false);
+        break;
+      case "work-tracking":
+        setPanelSelected(<WorkTracking />);
         setOpen(false);
         break;
       case "user":

@@ -1,6 +1,8 @@
 export interface ClientFormData {
-  nombre: string;
-  apellido: string;
+  matricula: string;
+  propietario: string;
+  modeloAuto: string;
+  anioAuto: string;
   dni: string;
   cuilCuit: string;
   fechaNacimiento: Date | null;

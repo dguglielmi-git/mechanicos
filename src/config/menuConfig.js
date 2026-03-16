@@ -57,9 +57,17 @@ export const MENU_ITEMS = [
         label: "Nuevo",
         icon: "PostAdd",
         level: 1,
+        action: "work-create",
       },
       {
         id: 9,
+        label: "Seguimiento",
+        icon: "TrackChanges",
+        level: 1,
+        action: "work-tracking",
+      },
+      {
+        id: 10,
         label: "Histórico",
         icon: "PlaylistAddCheck",
         level: 1,
@@ -67,7 +75,7 @@ export const MENU_ITEMS = [
     ],
   },
   {
-    id: 10,
+    id: 11,
     label: "Salir",
     icon: "ExitToApp",
     level: 0,

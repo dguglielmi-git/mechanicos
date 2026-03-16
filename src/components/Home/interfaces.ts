@@ -27,6 +27,8 @@ export type PanelAction =
   | "client-list"
   | "budget"
   | "budget-history"
+  | "work-create"
+  | "work-tracking"
   | "user";
 
 export interface DrawerProps {
@@ -42,4 +44,5 @@ export type IconKey =
   | "PlaylistAddCheck"
   | "Receipt"
   | "People"
-  | "Build";
+  | "Build"
+  | "TrackChanges";
