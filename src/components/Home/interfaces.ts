@@ -29,6 +29,7 @@ export type PanelAction =
   | "budget-history"
   | "work-create"
   | "work-tracking"
+  | "work-history"
   | "user";
 
 export interface DrawerProps {

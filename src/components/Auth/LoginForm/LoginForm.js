@@ -45,6 +45,9 @@ const LoginForm = () => {
         setToken(token);
         setUser(decodeToken(token));
         setLoading(false);
+        // Garantiza el cambio de pantalla incluso si la actualización de estado
+        // tarda/depende de routers internos.
+        window.location.assign("/home");
       } catch (error) {
         setError(error.message);
         setLoading(false);

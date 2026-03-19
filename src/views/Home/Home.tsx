@@ -11,6 +11,7 @@ import ClientCreate from "../ClientCreate";
 import ClientList from "../ClientList";
 import WorkCreate from "../WorkCreate";
 import WorkTracking from "../WorkTracking/WorkTracking";
+import HistoryWork from "../HistoryWork/HistoryWork";
 import useAuth from "../../hooks/useAuth";
 import { GET_TMPBUDGET } from "../../gql/budget";
 import User from "../User";
@@ -82,11 +83,13 @@ export default function Home(): React.ReactElement {
         setOpen(false);
         break;
       case "budget":
-        if (loading) return;
-        const getTmpbudget: TmpBudget[] = data?.getTmpbudget ?? [];
-        setPanelSelected(<Budget getTmpbudget={getTmpbudget} />);
-        setOpen(false);
-        break;
+        {
+          if (loading) return;
+          const getTmpbudget: TmpBudget[] = data?.getTmpbudget ?? [];
+          setPanelSelected(<Budget getTmpbudget={getTmpbudget} />);
+          setOpen(false);
+          break;
+        }
       case "budget-history":
         setPanelSelected(<BudgetHistory />);
         setOpen(false);
@@ -97,6 +100,10 @@ export default function Home(): React.ReactElement {
         break;
       case "work-tracking":
         setPanelSelected(<WorkTracking />);
+        setOpen(false);
+        break;
+      case "work-history":
+        setPanelSelected(<HistoryWork />);
         setOpen(false);
         break;
       case "user":

@@ -13,6 +13,8 @@
     "apollo-link-context": "^1.0.20",
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
+    "baseline-browser-mapping": "^2.10.8",
+    "caniuse-lite": "^1.0.30001780",
     "formik": "^2.2.6",
     "global": "^4.4.0",
     "graphql": "^15.5.1",
@@ -44,8 +46,9 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "set NODE_OPTIONS=--openssl-legacy-provider && npx react-scripts start",
-    "build": "set NODE_OPTIONS=--openssl-legacy-provider && npx react-scripts build",
+    "typecheck": "npx tsc -p tsconfig.json --noEmit",
+    "start": "npx tsc -p tsconfig.json --noEmit && node --openssl-legacy-provider -e \"process.env.DISABLE_FORK_TS_CHECKER='true'; require('react-scripts/scripts/start');\"",
+    "build": "npx tsc -p tsconfig.json --noEmit && node --openssl-legacy-provider -e \"process.env.DISABLE_FORK_TS_CHECKER='true'; require('react-scripts/scripts/build');\"",
     "test": "npx react-scripts test",
     "eject": "npx react-scripts eject"
   },
@@ -71,7 +74,7 @@
     ]
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^16.18.0",
     "@types/react": "17",
     "@types/react-dom": "17"
   }

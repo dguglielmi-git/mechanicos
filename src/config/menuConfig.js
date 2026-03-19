@@ -68,9 +68,10 @@ export const MENU_ITEMS = [
       },
       {
         id: 10,
-        label: "Histórico",
+        label: "Histórico de trabajos",
         icon: "PlaylistAddCheck",
         level: 1,
+        action: "work-history",
       },
     ],
   },

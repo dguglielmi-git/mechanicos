@@ -1,0 +1,76 @@
+@import "../../scss/index.scss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.history-work {
+  &__title {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 10px;
+
+    h4 {
+      font-family: "Poppins", sans-serif;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  }
+
+  &__content {
+    margin-top: 20px;
+  }
+
+  &__table {
+    .p-datatable-thead > tr > th {
+      cursor: pointer;
+
+      .p-column-title {
+        cursor: pointer;
+      }
+    }
+
+    .p-datatable-tbody > tr {
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(175, 241, 243, 0.2) !important;
+      }
+    }
+
+    // PrimeReact: colapsado usa `pi-chevron-right` y expandido `pi-chevron-down`.
+    // Queremos: colapsado (right) hacia abajo, expandido (down) hacia arriba.
+    .p-row-toggler-icon.pi-chevron-right {
+      display: inline-block;
+      transform: rotate(90deg);
+      transform-origin: center;
+    }
+
+    .p-row-toggler-icon.pi-chevron-down {
+      display: inline-block;
+      transform: rotate(180deg);
+      transform-origin: center;
+    }
+  }
+
+  &__expanded {
+    padding: 6px 0;
+  }
+
+  &__expanded-title {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  &__expanded-list {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+  }
+
+  &__expanded-item {
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+}
+

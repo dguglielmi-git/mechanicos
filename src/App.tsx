@@ -1,33 +1,37 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import Auth from "./views/Auth";
+import LandingPage from "./views/LandingPage";
 import AuthContext from "./context/AuthContext";
 import MyContextProvider from "./context/BudgetContext";
 import { ApolloProvider } from "@apollo/client";
 import client from "./config/apollo";
-import { getToken, decodeToken, removeToken } from "./utils/token";
+import { decodeToken, getToken, removeToken } from "./utils/token";
 import Navigation from "./routes/Navigation";
 
-function App() {
-  const [auth, setAuth] = useState(undefined);
+export default function App() {
+  const [auth, setAuth] = useState<any>(undefined);
   const history = useHistory();
 
   useEffect(() => {
     const token = getToken();
     if (!token) {
       setAuth(null);
-    } else {
-      const { exp } = decodeToken(token);
-      if (Date.now() >= exp * 1000) {
-        cleanStorage();
-      } else {
-        try {
-          setAuth(decodeToken(token));
-        } catch (error) {
-          cleanStorage();
-        }
-      }
+      return;
+    }
+
+    const decoded: any = decodeToken(token);
+    const { exp } = decoded;
+    if (Date.now() >= exp * 1000) {
+      cleanStorage();
+      return;
+    }
+
+    try {
+      setAuth(decoded);
+    } catch (error) {
+      cleanStorage();
     }
   }, []);
 
@@ -42,7 +46,7 @@ function App() {
     setAuth(null);
   };
 
-  const setUser = (user) => {
+  const setUser = (user: any) => {
     setAuth(user);
   };
 
@@ -57,9 +61,33 @@ function App() {
 
   if (auth === undefined) return null;
 
+  if (!auth) {
+    if (window.location.pathname === "/login") {
+      return (
+        <ApolloProvider client={client}>
+          <AuthContext.Provider value={authData as any}>
+            <MyContextProvider>
+              <Auth />
+            </MyContextProvider>
+          </AuthContext.Provider>
+        </ApolloProvider>
+      );
+    }
+
+    return (
+      <ApolloProvider client={client}>
+        <AuthContext.Provider value={authData as any}>
+          <MyContextProvider>
+            <LandingPage />
+          </MyContextProvider>
+        </AuthContext.Provider>
+      </ApolloProvider>
+    );
+  }
+
   return (
     <ApolloProvider client={client}>
-      <AuthContext.Provider value={authData}>
+      <AuthContext.Provider value={authData as any}>
         <MyContextProvider>
           {!auth ? <Auth /> : <Navigation />}
           <ToastContainer
@@ -79,4 +107,3 @@ function App() {
   );
 }
 
-export default App;

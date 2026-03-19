@@ -68,6 +68,7 @@ const MyContextProvider = ({ children }: BudgetContextProviderProps): React.Reac
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+  const handlePrintSafe = handlePrint ?? (() => {});
 
   const updateBudgetNumbers = useCallback(async (): Promise<void> => {
     await refetchBudget();
@@ -194,7 +195,7 @@ const MyContextProvider = ({ children }: BudgetContextProviderProps): React.Reac
     componentRef,
     cleanFields,
     validateCompletionFields,
-    handlePrint,
+    handlePrint: handlePrintSafe,
     getBudgetData,
     getFinalBudget,
     updateBudgetNumbers,

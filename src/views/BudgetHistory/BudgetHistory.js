@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
+import TextField from "@material-ui/core/TextField";
 import { formatDate } from "../../utils/utils";
 import ScrollingModal from "../../components/Common/ScrollingModal";
 import BudgetPreview from "../../components/Budget/BudgetPreview";
@@ -18,9 +18,9 @@ export default function BudgetHistory() {
 
   const [customers, setCustomers] = useState(null);
   const [selectedCustomer3, setSelectedCustomer3] = useState(null);
-  const [globalFilter1, setGlobalFilter1] = useState(null);
-  const [globalFilter2, setGlobalFilter2] = useState(null);
-  const [globalFilter3, setGlobalFilter3] = useState(null);
+  const [globalFilter1, setGlobalFilter1] = useState("");
+  const [globalFilter2, setGlobalFilter2] = useState("");
+  const [globalFilter3, setGlobalFilter3] = useState("");
   const [openScrollModal, setOpenScrollModal] = useState(false);
 
   const [budgetSelected, setBudgetSelected] = useState(null);
@@ -46,15 +46,26 @@ export default function BudgetHistory() {
   };
 
   const renderHeader = (globalFilterKey) => {
+    let currentValue;
+    if (globalFilterKey === "globalFilter1") {
+      currentValue = globalFilter1;
+    } else if (globalFilterKey === "globalFilter2") {
+      currentValue = globalFilter2;
+    } else {
+      currentValue = globalFilter3;
+    }
     return (
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText
+        <TextField
           type="search"
-          onInput={(e) =>
+          label="Búsqueda Global"
+          variant="outlined"
+          size="small"
+          onChange={(e) =>
             dataTableFuncMap[`${globalFilterKey}`](e.target.value)
           }
-          placeholder="Búsqueda Global"
+          value={currentValue ?? ""}
         />
       </span>
     );
@@ -68,7 +79,9 @@ export default function BudgetHistory() {
   };
 
   const onCustomRestoreState = () => {
-    return JSON.parse(window.sessionStorage.getItem("dt-state-demo-custom"));
+    return JSON.parse(
+      window.sessionStorage.getItem("dt-state-demo-custom")
+    );
   };
 
   const handleRowClick = (el) => {

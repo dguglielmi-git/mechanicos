@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Input, Button } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import TextField from "@material-ui/core/TextField";
 import { Client } from "./interfaces";
 import "./ClientList.scss";
 
@@ -20,13 +21,15 @@ export default function ClientList(): React.ReactElement {
         <h2>Listado de Clientes</h2>
       </div>
       <div className="client-list__search">
-        <Input
-          icon="search"
-          iconPosition="left"
-          placeholder="Buscar Cliente"
+        <TextField
+          label="Buscar Cliente"
+          variant="outlined"
+          size="small"
           value={searchText}
-          onChange={(_, data) => setSearchText(data.value)}
-          onKeyPress={(e: React.KeyboardEvent) => e.key === "Enter" && handleSearch()}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) =>
+            e.key === "Enter" && handleSearch()
+          }
           className="client-list__search-input"
         />
         <Button color="blue" onClick={handleSearch} className="client-list__search-btn">

@@ -1,0 +1,81 @@
+@import '../../scss/index.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+$row-gap: 16px;
+$col-gap: 16px;
+
+.work-form {
+  &__form-fields {
+    margin-bottom: 24px;
+  }
+
+  &__form-row {
+    display: flex;
+    align-items: center;
+    gap: $col-gap;
+    margin-bottom: $row-gap;
+    flex-wrap: wrap;
+
+    &--full {
+      width: 100%;
+      flex-wrap: nowrap;
+
+      .work-form__field-desc {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .work-form__btn-add {
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  &__field {
+    flex: 1 1 0;
+    min-width: 140px;
+
+    &.work-form__dropdown {
+      min-width: 180px;
+    }
+  }
+
+  &__label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &__labels {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: $row-gap;
+  }
+
+  &__table-wrap {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__table-opcion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  &__btn-cancel {
+    margin-left: 0;
+  }
+}

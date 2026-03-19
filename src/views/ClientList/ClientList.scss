@@ -22,11 +22,8 @@
       flex: 1;
       min-width: 0;
 
-      .ui.input {
-        width: 100% !important;
-      }
-
-      input {
+      .MuiFormControl-root,
+      .MuiInputBase-root {
         width: 100% !important;
       }
     }

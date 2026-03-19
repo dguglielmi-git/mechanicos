@@ -1,0 +1,26 @@
+@import '../../scss/index.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+$row-gap: 16px;
+$col-gap: 16px;
+
+.work-create {
+  .work-create__title {
+    display: flex;
+    justify-content: center !important;
+    margin-bottom: 10px;
+
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  }
+
+  &__content {
+    margin-top: 20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
